@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>三浦カズヒト(苗字が”ズラ井”に決定)(@kazuhito_m) - Twilog</title>
+    <meta name="description" content="三浦カズヒト(苗字が”ズラ井”に決定)(@kazuhito_m)のTwilog">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="icon" type="image/png" sizes="32x32" href="http://twilog.org/favicon.png">
+    <link rel="apple-touch-icon-precomposed" href="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_bigger.jpeg">
+    <link rel="alternate" type="application/rss+xml" title="三浦カズヒト(苗字が”ズラ井”に決定)(@kazuhito_m) - Twilog" href="http://twilog.org/rss-feed/kazuhito_m">
+
+    <link rel="stylesheet" href="http://twilog.org/css-dir/user.css?i=1">
+
+    <style type="text/css">
+        body {background:#022330 url(http://abs.twimg.com/images/themes/theme15/bg.png) no-repeat fixed 0 0; color:#333;}
+        a,a:hover {color:#0084B4;}
+        .side-list-icon,.nav-link a,.cal-nav a {background-color:#0084B4 !important;}
+        .tl-del a,.tl-del a:hover,.tl-name a:hover strong {color:#0084B4 !important;}
+
+    </style>
+
+    <!--[if lt IE 9]>
+    <script src="http://ie7-js.googlecode.com/svn/version/2.1(beta4)/IE9.js"></script>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+
+    <script>
+
+$(function(){
+
+	$('a[href=#pagetop]').click(function(){
+		$('html, body').animate({scrollTop:0}, 'fast');
+		return false;
+	});
+	$("#user-search-form").submit(function(){
+		user_search();
+		return false;
+	});
+	$("#uf").submit(function(){ $("#ub").attr("disabled","disabled"); });
+
+	add_twbutton();	c_id = "";
+	c_str = document.cookie+";";
+	start = c_str.indexOf("update_id=");
+	if (start != -1){
+		end = c_str.indexOf(";", start);
+		c_id = c_str.substring(start+10, end);
+		if(c_id=="kazuhito_m") return;
+	}
+
+	exp=new Date(); exp.setTime(exp.getTime()+1000*60*5);
+	document.cookie = "update_id=kazuhito_m; expires=" + exp.toGMTString();
+
+	url = "http://twilog.org/check-update.rb?c=84877685&l=540289869616934912&s=4425907";
+	$.ajax({
+		dataType : "jsonp",
+		url: url,
+		success: function(data) {
+			if(data.tw<0) return;
+
+			if(data.tw==0) {
+				$("#ub").attr("disabled","disabled").css("cursor","default").val("情報は最新です");
+				return;
+			}
+			$("#info").slideDown();
+		}
+	});
+
+
+
+});
+
+function user_search(){
+	var user_id = $("#user-search-form input[type=text]").val();
+
+	user_id = user_id.replace(/^[ ]+|[ ]+$/g, "");
+	if(user_id=="") {
+		alert("Twitter IDを入力してください");
+		return;
+	}else if(!user_id.match(/^@?[a-zA-Z0-9_]+$/)) {
+		alert("不正なTwitter IDです");
+		return;
+	}
+
+	user_id = user_id.replace("@","");
+	location.href = "http://twilog.org/"+user_id;
+}
+
+
+function word_search(){
+	var param = {}
+	param["word"] = encodeURIComponent($("#wsearch input[name='word']").val());
+	param["ao"] = ($("#ao-a").is(":checked")) ? "a" : "o";
+
+	var ar = [];
+	for(k in param){
+		if(param[k]=="") continue;
+		ar.push(k + "=" + param[k]);
+	}
+	location.href = "http://twilog.org/kazuhito_m/search?" + ar.join("&");
+}
+
+
+var srcbtn_date = false;
+
+function show_srcbtn(date){
+
+	if(!srcbtn_date){
+		var str = "<p class=\"mb5\">ソースを取得</p>";
+		str += "<p class=\"bt-src bt-common\"><a href=\"javascript:show_srcbox('')\">div・p</a></p>";
+		str += "<p class=\"bt-src bt-common\"><a href=\"javascript:show_srcbox('ul')\">ul・li</a></p>";
+		str += "<p class=\"bt-src bt-common\"><a href=\"javascript:show_srcbox('p')\">p</a></p>";
+		$("#s"+date).html(str).fadeIn("fast"); srcbtn_date = date;;
+	} else {
+		if(srcbtn_date==date){
+			$("#s"+date).fadeOut("fast"); srcbtn_date = false;
+		} else {
+			$("#s"+srcbtn_date).fadeOut("fast"); $("#s"+date).fadeIn("fast"); srcbtn_date = date;
+		}
+	}
+
+}
+
+function show_srcbox(type){
+
+	var date = srcbtn_date;
+	$("#s"+date).fadeOut("fast"); srcbtn_date = false;
+
+	$("#source-box").fadeOut("fast",function(){
+		$("#source-box").html("<img src='http://twilog.org/img-dir/r/ajax-loader.gif' class='mt50'>")
+	    wx = $(window).scrollLeft() + Math.floor(($(window).width() - $('#source-box').outerWidth()) / 2);
+	    wy = $(window).scrollTop() + Math.floor(($(window).height() - $('#source-box').outerHeight()) / 2);
+	    $("#source-box").css({ "top": wy, "left": wx }).fadeIn("fast");
+
+		$.ajax({
+			url : "http://twilog.org/source.rb?word=" ,
+			data : { "id":"kazuhito_m", "date":date, "cate":"", "param":"desc-", "type":type },
+			success : get_source_success,
+			error : function(){
+				alert("Error!!"); close_srcbox();
+			}
+
+		});
+	});
+}
+
+function get_source_success(src){ $("#source-box").html(src); }
+function close_srcbox(){ $("#source-box").fadeOut("fast"); }
+
+function add_twbutton(){
+	$("article.tl-tweet").each(function(){
+		var id = $(this).attr("id").substr(2);
+
+		var p_elem = $("<p/>").attr("class","tw-buttons");
+		var a_elem = $("<a/>").html("&nbsp;").attr({"href":"javascript:void(0);","class":"tb-rep","title":"返信"}).click({url:"https://twitter.com/intent/tweet?in_reply_to="+id},open_window);
+		$(p_elem).append(a_elem);
+		a_elem = $("<a/>").html("&nbsp;").attr({"href":"javascript:void(0);","class":"tb-rt","title":"リツイート"}).click({url:"https://twitter.com/intent/retweet?tweet_id="+id},open_window);
+		$(p_elem).append(a_elem);
+		a_elem = $("<a/>").html("&nbsp;").attr({"href":"javascript:void(0);","class":"tb-fav","title":"お気に入りに登録"}).click({url:"https://twitter.com/intent/favorite?tweet_id="+id},open_window);
+		$(p_elem).append(a_elem);
+		$(this).append(p_elem);
+	});
+}
+
+
+function open_window(e){
+	var ww=550; var hh=520;
+    var x = (screen.width - ww) / 2; var y = (screen.height - hh) / 2;
+    open(e.data.url, "childWindow", "width="+ww+",height="+hh+",left="+x+",top="+y);
+}
+
+function delete_tweet(date,status_id,obj){
+
+	var tc = $(obj).parent().parent().parent().parent().prev().find("span").html();
+
+	if(!confirm("このツイートを削除してもよろしいですか？")) return;
+
+	$.ajax({
+		url: "http://twilog.org/delete-tweet.rb?c=84877685&date=" + date + "&status_id=" + status_id + "&token=369bae88a79224cee9199463e9f48984",
+		success: function(data) {
+			if(data=="succeed"){
+				$(obj).parent().parent().parent().fadeOut("slow");
+
+				var tc = $(obj).parent().parent().parent().parent().prev().find("span");
+				tc.html(tc.html().replace(" tweets","")-1+" tweets");
+			} else {
+				alert("エラーが発生しました！\n" + data)
+			}
+		},
+		error: function(){ alert("エラーが発生しました。") }
+	});
+
+}
+
+
+
+</script>
+</head>
+
+<body>
+
+<header>
+    <section>
+        <p id="ti-twilog"><a href="http://twilog.org/">Twilog</a></p>
+        <ul>
+            <li><a href="http://twilog.org/page-about">このサイトについて</a></li>
+            <li><a href="http://twilog.org/page-help">ヘルプ</a></li>
+            <li><a href="http://twilog.org/settings.rb">管理</a></li>
+            <li><a href="javascript:void(0);" onclick="location.href='http://twilog.org/logout.rb';return false;">ログアウト</a></li>
+            <li><a href="http://twilog.org/kazuhito_m">@kazuhito_m</a></li>
+
+        </ul>
+
+        <form action="http://twilog.org/tl-tweets.rb" method="get" id="user-search-form">
+            <input type="text" name="id" value="" placeholder="Twitter ID">
+            <input type="submit" value="検索">
+        </form>
+    </section>
+</header>
+
+
+<div id="container">
+<div id="content">
+
+<ul class="breadcrumb">
+    <li class="home"><a href="http://twilog.org/">Twilog ホーム</a></li>
+    <li>@kazuhito_m</li>
+</ul>
+
+
+<section id="user-info">
+    <p id="user-info-bg"><img src="https://pbs.twimg.com/profile_banners/84877685/1396978217/ipad" width="610" height="305"></p>
+    <p id="user-info-shadow">&nbsp;</p>
+    <div id="user-info-content">
+        <p id="user-info-icon"><a href="http://twilog.org/kazuhito_m" title="@kazuhito_mのTwilogへ"><img src="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_bigger.jpeg" alt="@kazuhito_m" width="73" height="73"></a></p>
+        <h1><a href="http://twitter.com/kazuhito_m" target="_blank"><strong>三浦カズヒト(苗字が”ズラ井”に決定)</strong><span>@kazuhito_m</span></a></h1>
+        <ul class="user-follow">
+            <li><a href="http://twitter.com/kazuhito_m/following" target="_blank">700</a>フォロー</li>
+            <li><a href="http://twitter.com/kazuhito_m/followers" target="_blank">802</a>フォロワー</li>
+            <li><a href="http://twitter.com/kazuhito_m/memberships" target="_blank">55</a>リスト</li>
+        </ul>
+        <ul class="user-info-col">
+            <li class="user-info-place">大阪</li>
+            <li class="user-info-web"><a href="http://natural-born-minority.blogspot.com" target="_blank">http://natural-born-minority.blogspot.com</a></li>
+            <li class="user-info-comment">技術者のような浮浪者のような、モラトリアムのような中途リアルのような、なんにしろ非モテ。あとおっさん。
+
+                ※俺の周りは「そうではない人」が多いようですが、俺は日本が好きです。
+
+                興味:技術遊び,Linux,Jenkins,Ruby,Groovy/Grails,十穴ハーモニカ,雪駄,痩せる,恥豚様</li>
+        </ul>
+    </div>
+</section><!-- /user-info -->
+
+<section class="box-stats">
+    <table>
+        <tr>
+            <td class="title"><a href="http://twilog.org/kazuhito_m/stats">Stats</a></td>
+            <td class="stats"><strong>Twitter歴</strong><br>1,867日<span>（2009/10/25より）</span></td>
+            <td class="stats"><strong>ツイート数</strong><br>44,385<span>（23.7件/日）</span></td>
+        </tr>
+    </table>
+</section><!-- /box-stats -->
+
+
+<section class="box-sort mb10 mt15">
+    <div>
+        <p>ツイートの並び順 :</p>
+        <ul>
+            <li class="w4em"><span>通常</span></li>
+            <li class="w4em"><a href="http://twilog.org/kazuhito_m/asc">朝→夜</a></li>
+            <li class="w4em"><a href="http://twilog.org/kazuhito_m/allasc">古→新</a></li>
+        </ul>
+    </div>
+
+    <div>
+        <p>表示するツイート :</p>
+        <ul>
+            <li class="w4em"><span>全て</span></li>
+            <li><a href="http://twilog.org/kazuhito_m/norep" title="先頭に@のあるツイートを除く">Replyを除く</a></li>
+            <li><a href="http://twilog.org/kazuhito_m/nomen" title="文中に@のあるツイートを除く">Mentionを除く</a></li>
+            <li><a href="http://twilog.org/kazuhito_m/rt">公式RTのみ</a></li>
+            <li><a href="http://twilog.org/kazuhito_m/nort">公式RTを除く</a></li>
+        </ul>
+    </div>
+
+
+</section><!-- /box-sort -->
+
+
+<div style="text-align:center; margin-bottom:15px;">
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!-- Twilog メイン上部 -->
+    <ins class="adsbygoogle"
+         style="display:inline-block;width:468px;height:60px"
+         data-ad-client="ca-pub-2613098592193304"
+         data-ad-region="top"
+         data-ad-slot="4733284342"></ins>
+    <script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</div>
+
+
+
+
+<ul class="nav-link mb10 mt0">
+    <li class="nav-prev"><span>前のページ</span></li>
+    <li class="nav-user"><a href="http://twilog.org/kazuhito_m">@kazuhito_m</a></li>
+    <li class="nav-next"><a href="http://twilog.org/kazuhito_m/2">次のページ</a></li>
+</ul>
+
+
+<div id="info" class="mb10" style="display:none;"><p class="box-balloon"><a href="http://twilog.org/update.rb?id=kazuhito_m&order=&filter=&kind=reg"><span>新しいツイートが投稿されています</span></a></p></div>
+<h3 class="title01" id="d141204">
+    <a href="http://twilog.org/kazuhito_m/date-141204">2014年12月04日(木)</a><span>2 tweets</span><a href="javascript:void(0);" onclick="show_srcbtn('141204');return false;" title="ソースを取得" class="bt-source">source</a>
+    <p id="s141204" class="sbt-box"></p>
+</h3>
+
+<section class="tl-tweets">
+    <article class="tl-tweet" id="tw540289869616934912">
+        <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/540289869616934912" target="_blank">14時間前</a></p>
+        <p class="tl-icon"><a href="http://twitter.com/kazuhito_m" target="_blank"><img src="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+        <p class="tl-name"><a href="http://twitter.com/kazuhito_m" target="_blank"><strong>三浦カズヒト(苗字が”ズラ井”に決定)</strong><span>@kazuhito_m</span></a></p>
+        <p class="tl-text"><a href="https://twitter.com/hamazy" target="_blank">@hamazy</a> <a href="https://twitter.com/florets1" target="_blank">@florets1</a> <a href="https://twitter.com/tataminomusi" target="_blank">@tataminomusi</a> 了解です。かたじけない…。</p>
+
+        <p class="tl-posted">posted at <a href="http://twitter.com/kazuhito_m/status/540289869616934912" target="_blank">08:41:57</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141204','540289869616934912',this)">削除</a></span></p>
+    </article><!-- /tl-tweet -->
+
+    <article class="tl-tweet" id="tw540276078678265856">
+        <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/540276078678265856" target="_blank">14時間前</a></p>
+        <p class="tl-icon"><a href="http://twitter.com/kazuhito_m" target="_blank"><img src="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+        <p class="tl-name"><a href="http://twitter.com/kazuhito_m" target="_blank"><strong>三浦カズヒト(苗字が”ズラ井”に決定)</strong><span>@kazuhito_m</span></a></p>
+        <p class="tl-text"><a href="https://twitter.com/florets1" target="_blank">@florets1</a> <a href="https://twitter.com/tataminomusi" target="_blank">@tataminomusi</a> <a href="https://twitter.com/hamazy" target="_blank">@hamazy</a> 済んでないです。スポンサーの方に「質問したいのでDM送らせてください」と、Twitter上で話しかけ(メンション)てますが、それ以降進んでません。(DMするには相手からのフォローが要りますし、何かしら反応欲しい)</p>
+
+        <p class="tl-posted">posted at <a href="http://twitter.com/kazuhito_m/status/540276078678265856" target="_blank">07:47:09</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141204','540276078678265856',this)">削除</a></span></p>
+    </article><!-- /tl-tweet -->
+
+
+</section><!-- /tl-tweets -->
+
+<h3 class="title01" id="d141203">
+    <a href="http://twilog.org/kazuhito_m/date-141203">2014年12月03日(水)</a><span>2 tweets</span><a href="javascript:void(0);" onclick="show_srcbtn('141203');return false;" title="ソースを取得" class="bt-source">source</a>
+    <p id="s141203" class="sbt-box"></p>
+</h3>
+
+<section class="tl-tweets">
+    <article class="tl-tweet" id="tw540099317210435584">
+        <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/540099317210435584" target="_blank">12月3日</a></p>
+        <p class="tl-icon"><a href="http://twitter.com/kazuhito_m" target="_blank"><img src="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+        <p class="tl-name"><a href="http://twitter.com/kazuhito_m" target="_blank"><strong>三浦カズヒト(苗字が”ズラ井”に決定)</strong><span>@kazuhito_m</span></a></p>
+        <p class="tl-text">くっそ！ 急いでんのに「GithubPageが見られない(Not foundになる)」という現象に悩まされている。調べてると「Spam扱いされている」とかの場合もあるらしいけれど…ユーザ名にハイフン入ってるのが悪いんかな？</p>
+
+        <p class="tl-posted">posted at <a href="http://twitter.com/kazuhito_m/status/540099317210435584" target="_blank">20:04:46</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141203','540099317210435584',this)">削除</a></span></p>
+    </article><!-- /tl-tweet -->
+
+    <article class="tl-tweet" id="tw539905296798212096">
+        <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539905296798212096" target="_blank">12月3日</a></p>
+        <p class="tl-icon"><a href="http://twitter.com/kazuhito_m" target="_blank"><img src="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+        <p class="tl-name"><a href="http://twitter.com/kazuhito_m" target="_blank"><strong>三浦カズヒト(苗字が”ズラ井”に決定)</strong><span>@kazuhito_m</span></a></p>
+        <p class="tl-text"><a href="https://twitter.com/yukieen" target="_blank">@yukieen</a> おめでっしょい！</p>
+
+        <p class="tl-posted">posted at <a href="http://twitter.com/kazuhito_m/status/539905296798212096" target="_blank">07:13:48</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141203','539905296798212096',this)">削除</a></span></p>
+    </article><!-- /tl-tweet -->
+
+
+</section><!-- /tl-tweets -->
+
+<h3 class="title01" id="d141202">
+    <a href="http://twilog.org/kazuhito_m/date-141202">2014年12月02日(火)</a><span>28 tweets</span><a href="javascript:void(0);" onclick="show_srcbtn('141202');return false;" title="ソースを取得" class="bt-source">source</a>
+    <p id="s141202" class="sbt-box"></p>
+</h3>
+
+<section class="tl-tweets">
+<article class="tl-tweet" id="tw539782493985976320">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539782493985976320" target="_blank">12月2日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/kazuhito_m" target="_blank"><img src="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/kazuhito_m" target="_blank"><strong>三浦カズヒト(苗字が”ズラ井”に決定)</strong><span>@kazuhito_m</span></a></p>
+    <p class="tl-text">何気なくCoffeeScriptのTips探してたら、今度はあやぴーさんだった…。 なんなんだこの界隈ｗ JavaScriptもしくはCoffeeScriptの連想配列でkeyに変数を使いたい -<a href="http://t.co/TjFev88awy" target="_blank" title="http://ayato.hateblo.jp/entry/20140211/1392127611"><span class="invisible">http://</span>ayato.hateblo.jp/entry/20140211<span class="invisible">1392127611</span>…</a></p>
+
+    <p class="tl-posted">posted at <a href="http://twitter.com/kazuhito_m/status/539782493985976320" target="_blank">23:05:49</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141202','539782493985976320',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539777346891288576">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539777346891288576" target="_blank">12月2日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/inabayashiroeki" target="_blank"><img src="http://pbs.twimg.com/profile_images/523832762776555523/wEOl_KkN_normal.png" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/inabayashiroeki" target="_blank"><strong>東京えく</strong><span>@inabayashiroeki</span></a></p>
+    <p class="tl-text"> 教えて！お姉さん！ <span class="invisible">https://</span><a href="http://t.co/eEbgdTNzPk" target="_blank">pic.twitter.com/eEbgdTNzPk</a><p class="tl-retweet">Retweeted by <a href="https://twitter.com/kazuhito_m" target="_blank">三浦カズヒト(苗字が”ズラ井”に決定)</a></p></p>
+
+    <p class="tl-posted">retweeted at <a href="http://twitter.com/kazuhito_m/status/539777346891288576" target="_blank">22:45:22</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141202','539777346891288576',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539776979835187201">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539776979835187201" target="_blank">12月2日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/kazuhito_m" target="_blank"><img src="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/kazuhito_m" target="_blank"><strong>三浦カズヒト(苗字が”ズラ井”に決定)</strong><span>@kazuhito_m</span></a></p>
+    <p class="tl-text"><a href="https://twitter.com/backpaper0" target="_blank">@backpaper0</a> <a href="https://twitter.com/s_kozake" target="_blank">@s_kozake</a> 。o O (いかん、このうらがみ「根性ありすぎ」て、このまま話しあわせてたら「いつのまにか売却」ってことにもなりかねん…。 ）</p>
+
+    <p class="tl-posted">posted at <a href="http://twitter.com/kazuhito_m/status/539776979835187201" target="_blank">22:43:55</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141202','539776979835187201',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539776490225680385">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539776490225680385" target="_blank">12月2日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/kazuhito_m" target="_blank"><img src="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/kazuhito_m" target="_blank"><strong>三浦カズヒト(苗字が”ズラ井”に決定)</strong><span>@kazuhito_m</span></a></p>
+    <p class="tl-text"><a href="https://twitter.com/backpaper0" target="_blank">@backpaper0</a> <a href="https://twitter.com/s_kozake" target="_blank">@s_kozake</a> うらがみさんが「自らのを売る」ってんなら、考え無くもないですが…。 <a href="https://twitter.com/search?q=%23%E4%BF%BA%E3%81%AE%E3%81%AF%E3%82%82%E3%81%86%E5%AE%89%E3%81%8F%E3%81%97%E3%81%8B%E3%81%86%E3%82%8C%E3%81%AD%E3%83%BC%E3%82%88%EF%BD%97" target="_blank">#俺のはもう安くしかうれねーよｗ</a></p>
+
+    <p class="tl-posted">posted at <a href="http://twitter.com/kazuhito_m/status/539776490225680385" target="_blank">22:41:58</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141202','539776490225680385',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539775968366182400">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539775968366182400" target="_blank">12月2日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/kazuhito_m" target="_blank"><img src="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/kazuhito_m" target="_blank"><strong>三浦カズヒト(苗字が”ズラ井”に決定)</strong><span>@kazuhito_m</span></a></p>
+    <p class="tl-text"><a href="https://twitter.com/backpaper0" target="_blank">@backpaper0</a> <a href="https://twitter.com/s_kozake" target="_blank">@s_kozake</a> ああ、それ…「リソースがそもそもない」ので、ルールどころの騒ぎじゃないですよ？ <a href="https://twitter.com/search?q=%23%E7%B5%8C%E6%B8%88%E7%8A%B6%E6%B3%81%E3%81%8C%E3%83%90%E3%83%AC%E3%81%A6%E3%81%84%E3%81%A6%E3%82%88%E3%81%8B%E3%81%A3%E3%81%9F%E4%BE%8B" target="_blank">#経済状況がバレていてよかった例</a></p>
+
+    <p class="tl-posted">posted at <a href="http://twitter.com/kazuhito_m/status/539775968366182400" target="_blank">22:39:54</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141202','539775968366182400',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539775709632155648">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539775709632155648" target="_blank">12月2日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/kazuhito_m" target="_blank"><img src="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/kazuhito_m" target="_blank"><strong>三浦カズヒト(苗字が”ズラ井”に決定)</strong><span>@kazuhito_m</span></a></p>
+    <p class="tl-text"><a href="https://twitter.com/s_kozake" target="_blank">@s_kozake</a> <a href="https://twitter.com/backpaper0" target="_blank">@backpaper0</a> ルールにしたがって… <a href="https://twitter.com/search?q=%23%E5%AF%BF%E5%8F%B8%E3%82%92" target="_blank">#寿司を</a></p>
+
+    <p class="tl-posted">posted at <a href="http://twitter.com/kazuhito_m/status/539775709632155648" target="_blank">22:38:52</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141202','539775709632155648',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539772718954995712">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539772718954995712" target="_blank">12月2日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/kazuhito_m" target="_blank"><img src="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/kazuhito_m" target="_blank"><strong>三浦カズヒト(苗字が”ズラ井”に決定)</strong><span>@kazuhito_m</span></a></p>
+    <p class="tl-text"><a href="https://twitter.com/White_Raven777" target="_blank">@White_Raven777</a> <a href="https://twitter.com/White_Raven777" target="_blank">@White_Raven777</a> だれが認知症やねんｗ <a href="https://twitter.com/search?q=%23%E3%81%9D%E3%82%93%E3%81%AA%E3%81%93%E3%81%A8%E3%82%88%E3%82%8ART%E3%81%95%E3%81%9B%E3%82%8D" target="_blank">#そんなことよりRTさせろ</a></p>
+
+    <p class="tl-posted">posted at <a href="http://twitter.com/kazuhito_m/status/539772718954995712" target="_blank">22:26:59</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141202','539772718954995712',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539772153848004608">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539772153848004608" target="_blank">12月2日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/kazuhito_m" target="_blank"><img src="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/kazuhito_m" target="_blank"><strong>三浦カズヒト(苗字が”ズラ井”に決定)</strong><span>@kazuhito_m</span></a></p>
+    <p class="tl-text">「はらませる」「事後報告」…？？？ <a href="https://twitter.com/search?q=%23%E4%B8%8D%E7%A9%8F%E3%81%AA%E7%A9%BA%E6%B0%97" target="_blank">#不穏な空気</a></p>
+
+    <p class="tl-posted">posted at <a href="http://twitter.com/kazuhito_m/status/539772153848004608" target="_blank">22:24:44</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141202','539772153848004608',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539772073418039296">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539772073418039296" target="_blank">12月2日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/nakanishiyasuo" target="_blank"><img src="http://pbs.twimg.com/profile_images/752134565/4664624_1256287263_normal.jpg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/nakanishiyasuo" target="_blank"><strong>Yasuo Nakanishi</strong><span>@nakanishiyasuo</span></a></p>
+    <p class="tl-text"> <a href="https://twitter.com/peko_kun" target="_blank">@peko_kun</a> <a href="https://twitter.com/s_kozake" target="_blank">@s_kozake</a> とうとうはらませちゃったんです？<p class="tl-retweet">Retweeted by <a href="https://twitter.com/kazuhito_m" target="_blank">三浦カズヒト(苗字が”ズラ井”に決定)</a></p></p>
+
+    <p class="tl-posted">retweeted at <a href="http://twitter.com/kazuhito_m/status/539772073418039296" target="_blank">22:24:25</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141202','539772073418039296',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539770737846808577">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539770737846808577" target="_blank">12月2日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/kazuhito_m" target="_blank"><img src="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/kazuhito_m" target="_blank"><strong>三浦カズヒト(苗字が”ズラ井”に決定)</strong><span>@kazuhito_m</span></a></p>
+    <p class="tl-text"><a href="https://twitter.com/White_Raven777" target="_blank">@White_Raven777</a> はいじゃないがｗ</p>
+
+    <p class="tl-posted">posted at <a href="http://twitter.com/kazuhito_m/status/539770737846808577" target="_blank">22:19:07</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141202','539770737846808577',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539770474188636160">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539770474188636160" target="_blank">12月2日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/kazuhito_m" target="_blank"><img src="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/kazuhito_m" target="_blank"><strong>三浦カズヒト(苗字が”ズラ井”に決定)</strong><span>@kazuhito_m</span></a></p>
+    <p class="tl-text">はぁ、彼女欲しい。 <a href="https://twitter.com/search?q=%23%E4%BA%88%E3%82%81TL%E3%81%AE%E3%81%A0%E3%82%8C%E3%81%8B%E3%81%95%E3%82%93%E3%81%AE%E3%81%8A%E6%A0%AA%E3%82%92%E5%A5%AA%E3%81%A3%E3%81%A6%E3%81%84%E3%81%8F%E4%BD%9C%E6%88%A6" target="_blank">#予めTLのだれかさんのお株を奪っていく作戦</a></p>
+
+    <p class="tl-posted">posted at <a href="http://twitter.com/kazuhito_m/status/539770474188636160" target="_blank">22:18:04</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141202','539770474188636160',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539770055982981120">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539770055982981120" target="_blank">12月2日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/kazuhito_m" target="_blank"><img src="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/kazuhito_m" target="_blank"><strong>三浦カズヒト(苗字が”ズラ井”に決定)</strong><span>@kazuhito_m</span></a></p>
+    <p class="tl-text"><a href="https://twitter.com/mlhshino" target="_blank">@mlhshino</a> hamazy さんに勉強会の会場の件でご紹介いただきました三浦です。お世話になります。会場の件でご質問させていただきたい…のですが、DM送りたいので一時的でもフォローいただけないでしょうか。ぶしつけながらよろしくお願いします。</p>
+
+    <p class="tl-posted">posted at <a href="http://twitter.com/kazuhito_m/status/539770055982981120" target="_blank">22:16:24</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141202','539770055982981120',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539768167636029440">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539768167636029440" target="_blank">12月2日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/kazuhito_m" target="_blank"><img src="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/kazuhito_m" target="_blank"><strong>三浦カズヒト(苗字が”ズラ井”に決定)</strong><span>@kazuhito_m</span></a></p>
+    <p class="tl-text">ミス…だよなあ？ <a href="https://twitter.com/search?q=%23%E6%88%A6%E5%BE%8C%E3%81%BE%E3%82%82%E3%81%AA%E3%81%8F%E3%81%8B%E3%82%89%E9%80%A3%E8%BC%89" target="_blank">#戦後まもなくから連載</a>？</p>
+
+    <p class="tl-posted">posted at <a href="http://twitter.com/kazuhito_m/status/539768167636029440" target="_blank">22:08:54</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141202','539768167636029440',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539768077307506688">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539768077307506688" target="_blank">12月2日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/comic_natalie" target="_blank"><img src="http://pbs.twimg.com/profile_images/668717225/twitter-comic_normal.png" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/comic_natalie" target="_blank"><strong>コミックナタリー</strong><span>@comic_natalie</span></a></p>
+    <p class="tl-text"> 「CCさくら」60周年記念版、全9巻で刊行決定！表紙はCLAMP描き下ろし <a href="http://t.co/QVetUrUf0f" target="_blank" title="http://natalie.mu/comic/news/132554"><span class="invisible">http://</span>natalie.mu/comic/news/132<span class="invisible">54</span>…</a> <span class="invisible">https://</span><a href="http://t.co/QDN3MEZCYx" target="_blank">pic.twitter.com/QDN3MEZCYx</a><p class="tl-retweet">Retweeted by <a href="https://twitter.com/kazuhito_m" target="_blank">三浦カズヒト(苗字が”ズラ井”に決定)</a></p></p>
+
+    <p class="tl-posted">retweeted at <a href="http://twitter.com/kazuhito_m/status/539768077307506688" target="_blank">22:08:32</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141202','539768077307506688',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539767807097851905">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539767807097851905" target="_blank">12月2日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/kazuhito_m" target="_blank"><img src="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/kazuhito_m" target="_blank"><strong>三浦カズヒト(苗字が”ズラ井”に決定)</strong><span>@kazuhito_m</span></a></p>
+    <p class="tl-text"><a href="https://twitter.com/florets1" target="_blank">@florets1</a> <a href="https://twitter.com/hamazy" target="_blank">@hamazy</a> <a href="https://twitter.com/tataminomusi" target="_blank">@tataminomusi</a> お疲れ様です。少し、多忙で「早めに忘れておきたかった」ので、「懇親会の店の押さえ」をしました。１４人位いけるとこです。詳細はペンダクティブを！ 明日、確認の電話を書ける予定です。以上、勝手してごめんさい。</p>
+
+    <p class="tl-posted">posted at <a href="http://twitter.com/kazuhito_m/status/539767807097851905" target="_blank">22:07:28</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141202','539767807097851905',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539732631227617280">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539732631227617280" target="_blank">12月2日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/kazuhito_m" target="_blank"><img src="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/kazuhito_m" target="_blank"><strong>三浦カズヒト(苗字が”ズラ井”に決定)</strong><span>@kazuhito_m</span></a></p>
+    <p class="tl-text"><a href="https://twitter.com/tmybj" target="_blank">@tmybj</a> やだよそんなんw ドロッドロゆかむ</p>
+
+    <p class="tl-posted">posted at <a href="http://twitter.com/kazuhito_m/status/539732631227617280" target="_blank">19:47:41</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141202','539732631227617280',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539732462507552768">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539732462507552768" target="_blank">12月2日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/kazuhito_m" target="_blank"><img src="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/kazuhito_m" target="_blank"><strong>三浦カズヒト(苗字が”ズラ井”に決定)</strong><span>@kazuhito_m</span></a></p>
+    <p class="tl-text"><a href="https://twitter.com/peko_kun" target="_blank">@peko_kun</a> やりましょう！ <a href="https://twitter.com/search?q=%23%E6%95%99%E3%81%88%E3%81%A6%E3%81%8F%E3%81%A0%E3%81%95%E3%81%84" target="_blank">#教えてください</a>！</p>
+
+    <p class="tl-posted">posted at <a href="http://twitter.com/kazuhito_m/status/539732462507552768" target="_blank">19:47:01</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141202','539732462507552768',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539731856128614400">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539731856128614400" target="_blank">12月2日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/kazuhito_m" target="_blank"><img src="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/kazuhito_m" target="_blank"><strong>三浦カズヒト(苗字が”ズラ井”に決定)</strong><span>@kazuhito_m</span></a></p>
+    <p class="tl-text"><a href="https://twitter.com/White_Raven777" target="_blank">@White_Raven777</a> <a href="https://twitter.com/tmybj" target="_blank">@tmybj</a> <a href="https://twitter.com/murase_syuka" target="_blank">@murase_syuka</a> あやまれっ！全国のからすにあやまれっ！w <a href="https://twitter.com/search?q=%23%E3%81%9D%E3%81%86%E3%81%8A%E3%81%8A%E3%81%92%E3%81%95%E3%81%AA%E3%81%93%E3%81%A8%E3%81%A7%E3%82%82%E3%81%AA%E3%81%84" target="_blank">#そうおおげさなことでもない</a></p>
+
+    <p class="tl-posted">posted at <a href="http://twitter.com/kazuhito_m/status/539731856128614400" target="_blank">19:44:36</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141202','539731856128614400',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539731527152578563">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539731527152578563" target="_blank">12月2日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/piiiichann" target="_blank"><img src="http://pbs.twimg.com/profile_images/466065083127177217/ywPGjR1g_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/piiiichann" target="_blank"><strong>ピイーチャン</strong><span>@piiiichann</span></a></p>
+    <p class="tl-text"> <a href="http://t.co/icmIZLFe1d" target="_blank" title="http://xn--n9jtg5cpd35ar94obpb75ro5i3ymfy3abd0c.xn--r8j7at8o9a1315d4ue9pq6m3a4bm.xn--vbk9a8axg6e7b3cc3903jpxc355l"><span class="invisible">http://</span>xn--n9jtg5cpd35ar94obpb75ro5i3ymfy3abd0c.xn--r8j7at8o9a1315d4ue9pq6m3a4bm.xn--vbk9a8axg6e7b3cc3903jpxc355l</a> <a href="http://t.co/LE8iQa0sIS" target="_blank" title="http://xn--l8jdg0evdiev6a8prdh81971a.xn--88j0ab6aa5dyq6cvgpbj57byd8ey481c4ybkz9avi7a0p4b"><span class="invisible">http://</span>xn--l8jdg0evdiev6a8prdh81971a.xn--88j0ab6aa5dyq6cvgpbj57byd8ey481c4ybkz9avi7a0p4b</a> <a href="http://t.co/QdXGi88FJw" target="_blank" title="http://xn--v8jva1axfad4czi5ek9a5736gubeiwlvwv489a2sal58dv51gwu3a.xn--48j9b3dd5joj7fuf6150ejz5a"><span class="invisible">http://</span>xn--v8jva1axfad4czi5ek9a5736gubeiwlvwv489a2sal58dv51gwu3a.xn--48j9b3dd5joj7fuf6150ejz5a</a> <a href="http://t.co/SfIn5vwqnl" target="_blank" title="http://xn--n9jaiq1f099ugba180svku.xn--n8je3b9dagdqi7pvf0359aaa108rt8seqit37ahylj9grs7i784a"><span class="invisible">http://</span>xn--n9jaiq1f099ugba180svku.xn--n8je3b9dagdqi7pvf0359aaa108rt8seqit37ahylj9grs7i784a</a> <a href="http://t.co/BUAa5Qkkn2" target="_blank" title="http://xn--n8jubxae0bhm3n3gotybk4298g7jzci62h.xn--n8j7af4dhbr7azwli2osjli0915b9w3a"><span class="invisible">http://</span>xn--n8jubxae0bhm3n3gotybk4298g7jzci62h.xn--n8j7af4dhbr7azwli2osjli0915b9w3a</a> <a href="http://t.co/zUz8Dk1mbm" target="_blank" title="http://xn--l8jtao6ass71acc8002jw7c452cmy1f.xn--88j1aa1241anba95as4a11mf30aejx"><span class="invisible">http://</span>xn--l8jtao6ass71acc8002jw7c452cmy1f.xn--88j1aa1241anba95as4a11mf30aejx</a><p class="tl-retweet">Retweeted by <a href="https://twitter.com/kazuhito_m" target="_blank">三浦カズヒト(苗字が”ズラ井”に決定)</a></p></p>
+
+    <p class="tl-posted">retweeted at <a href="http://twitter.com/kazuhito_m/status/539731527152578563" target="_blank">19:43:18</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141202','539731527152578563',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539731263305682944">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539731263305682944" target="_blank">12月2日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/kazuhito_m" target="_blank"><img src="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/kazuhito_m" target="_blank"><strong>三浦カズヒト(苗字が”ズラ井”に決定)</strong><span>@kazuhito_m</span></a></p>
+    <p class="tl-text"><a href="https://twitter.com/White_Raven777" target="_blank">@White_Raven777</a> <a href="https://twitter.com/tmybj" target="_blank">@tmybj</a> <a href="https://twitter.com/murase_syuka" target="_blank">@murase_syuka</a> 才能関係無いぞ！まずは鍵はずすんやっ！w</p>
+
+    <p class="tl-posted">posted at <a href="http://twitter.com/kazuhito_m/status/539731263305682944" target="_blank">19:42:15</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141202','539731263305682944',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539730917489512448">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539730917489512448" target="_blank">12月2日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/kazuhito_m" target="_blank"><img src="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/kazuhito_m" target="_blank"><strong>三浦カズヒト(苗字が”ズラ井”に決定)</strong><span>@kazuhito_m</span></a></p>
+    <p class="tl-text"><a href="https://twitter.com/tmybj" target="_blank">@tmybj</a> そりゃまた…消化によさそうな…。w <a href="https://twitter.com/search?q=%23%E3%82%A4%E3%83%A1%E3%83%BC%E3%82%B8%E3%81%AF%E7%89%87%E6%A0%97%E7%B2%89" target="_blank">#イメージは片栗粉</a></p>
+
+    <p class="tl-posted">posted at <a href="http://twitter.com/kazuhito_m/status/539730917489512448" target="_blank">19:40:53</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141202','539730917489512448',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539730486554152960">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539730486554152960" target="_blank">12月2日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/kazuhito_m" target="_blank"><img src="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/kazuhito_m" target="_blank"><strong>三浦カズヒト(苗字が”ズラ井”に決定)</strong><span>@kazuhito_m</span></a></p>
+    <p class="tl-text"><a href="https://twitter.com/tmybj" target="_blank">@tmybj</a> ホトケカムー？</p>
+
+    <p class="tl-posted">posted at <a href="http://twitter.com/kazuhito_m/status/539730486554152960" target="_blank">19:39:10</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141202','539730486554152960',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539730378768920577">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539730378768920577" target="_blank">12月2日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/kazuhito_m" target="_blank"><img src="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/kazuhito_m" target="_blank"><strong>三浦カズヒト(苗字が”ズラ井”に決定)</strong><span>@kazuhito_m</span></a></p>
+    <p class="tl-text"><a href="https://twitter.com/tmybj" target="_blank">@tmybj</a> <a href="https://twitter.com/murase_syuka" target="_blank">@murase_syuka</a> www草生えるwww 何個か意味で</p>
+
+    <p class="tl-posted">posted at <a href="http://twitter.com/kazuhito_m/status/539730378768920577" target="_blank">19:38:44</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141202','539730378768920577',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539729920105017347">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539729920105017347" target="_blank">12月2日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/kazuhito_m" target="_blank"><img src="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/kazuhito_m" target="_blank"><strong>三浦カズヒト(苗字が”ズラ井”に決定)</strong><span>@kazuhito_m</span></a></p>
+    <p class="tl-text"><a href="https://twitter.com/murase_syuka" target="_blank">@murase_syuka</a> <a href="https://twitter.com/tmybj" target="_blank">@tmybj</a> みんな勘違いしてない？「俺のこと」やで？最初からw <a href="https://twitter.com/search?q=%23%E3%82%88%E3%81%8F%E3%82%88%E3%81%BF%E3%81%8B%E3%81%88%E3%81%97%E3%81%A6%E3%81%BF%E3%82%8B%E3%82%93%E3%82%84" target="_blank">#よくよみかえしてみるんや</a> <a href="https://twitter.com/search?q=%23%E3%83%9B%E3%83%88%E3%82%B1%E6%84%9F%E5%87%BA%E3%81%97%E3%81%AA%E3%81%8C%E3%82%89" target="_blank">#ホトケ感出しながら</a></p>
+
+    <p class="tl-posted">posted at <a href="http://twitter.com/kazuhito_m/status/539729920105017347" target="_blank">19:36:55</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141202','539729920105017347',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539728212834545665">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539728212834545665" target="_blank">12月2日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/kazuhito_m" target="_blank"><img src="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/kazuhito_m" target="_blank"><strong>三浦カズヒト(苗字が”ズラ井”に決定)</strong><span>@kazuhito_m</span></a></p>
+    <p class="tl-text"><a href="https://twitter.com/tmybj" target="_blank">@tmybj</a> 。o O (これが真の「キレやすいヤーツ」ですよっ！)</p>
+
+    <p class="tl-posted">posted at <a href="http://twitter.com/kazuhito_m/status/539728212834545665" target="_blank">19:30:08</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141202','539728212834545665',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539727758528491521">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539727758528491521" target="_blank">12月2日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/kazuhito_m" target="_blank"><img src="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/kazuhito_m" target="_blank"><strong>三浦カズヒト(苗字が”ズラ井”に決定)</strong><span>@kazuhito_m</span></a></p>
+    <p class="tl-text"><a href="https://twitter.com/tmybj" target="_blank">@tmybj</a> なんだと！ <a href="https://twitter.com/search?q=%23%EF%BE%8C%EF%BE%9F%EF%BE%9D%EF%BD%BD%EF%BD%BA" target="_blank">#ﾌﾟﾝｽｺ</a></p>
+
+    <p class="tl-posted">posted at <a href="http://twitter.com/kazuhito_m/status/539727758528491521" target="_blank">19:28:19</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141202','539727758528491521',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539727658100080640">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539727658100080640" target="_blank">12月2日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/atomfe" target="_blank"><img src="http://pbs.twimg.com/profile_images/539834745811509249/Vmbo7eeH_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/atomfe" target="_blank"><strong>砂鉄</strong><span>@atomfe</span></a></p>
+    <p class="tl-text"> 帯の内容がここまで適切な本を初めて見た！ <a href="http://t.co/ReBuW6WLIn" target="_blank" title="http://www.amazon.co.jp/gp/product/4048864424?ie=UTF8&camp=1207&creative=8411&creativeASIN=4048864424&linkCode=shr&tag=ironsand0b-22&qid=1417346453&sr=8-1"><span class="invisible">http://</span>www.amazon.co.jp/gp/product/404<span class="invisible">864424?ie=UTF8&camp=1207&creative=8411&creativeASIN=4048864424&linkCode=shr&tag=ironsand0b-22&qid=1417346453&sr=8-1</span>…</a> <span class="invisible">https://</span><a href="http://t.co/2OQzgjL2jA" target="_blank">pic.twitter.com/2OQzgjL2jA</a><p class="tl-retweet">Retweeted by <a href="https://twitter.com/kazuhito_m" target="_blank">三浦カズヒト(苗字が”ズラ井”に決定)</a></p></p>
+
+    <p class="tl-posted">retweeted at <a href="http://twitter.com/kazuhito_m/status/539727658100080640" target="_blank">19:27:56</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141202','539727658100080640',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539441617854156800">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539441617854156800" target="_blank">12月2日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/Otori_OAO" target="_blank"><img src="http://pbs.twimg.com/profile_images/536535492938850304/pWz459A6_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/Otori_OAO" target="_blank"><strong>鴻</strong><span>@Otori_OAO</span></a></p>
+    <p class="tl-text"> 仙台市民がざわついてることを一言でまとめると、昔はギャル御用達レベルだったファッションビルが震災を堺に廃れていき何を思ったのか「みんなー！！オラに力を分けてくれーー！」と仙台街中に点在するオタク店を１店舗に集約させる事が決定され市民大困惑。<p class="tl-retweet">Retweeted by <a href="https://twitter.com/kazuhito_m" target="_blank">三浦カズヒト(苗字が”ズラ井”に決定)</a></p></p>
+
+    <p class="tl-posted">retweeted at <a href="http://twitter.com/kazuhito_m/status/539441617854156800" target="_blank">00:31:18</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141202','539441617854156800',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+
+</section><!-- /tl-tweets -->
+
+<h3 class="title01" id="d141201">
+    <a href="http://twilog.org/kazuhito_m/date-141201">2014年12月01日(月)</a><span>34 tweets</span><a href="javascript:void(0);" onclick="show_srcbtn('141201');return false;" title="ソースを取得" class="bt-source">source</a>
+    <p id="s141201" class="sbt-box"></p>
+</h3>
+
+<section class="tl-tweets">
+<article class="tl-tweet" id="tw539422101841530881">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539422101841530881" target="_blank">12月1日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/kazuhito_m" target="_blank"><img src="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/kazuhito_m" target="_blank"><strong>三浦カズヒト(苗字が”ズラ井”に決定)</strong><span>@kazuhito_m</span></a></p>
+    <p class="tl-text">Hubot界隈のトラブルシュートしてると「あのBouzuyaさん」みたいな感じの登場するから、俺の中で「重鎮感」が青天井で上がっているｗ - 最近のHubotの運用とか - killed_by?(Charity) <a href="http://t.co/wcIvqrSID9" target="_blank" title="http://udzura.hatenablog.jp/entry/2014/11/01/002033"><span class="invisible">http://</span>udzura.hatenablog.jp/entry/2014/11/<span class="invisible">1/002033</span>…</a></p>
+
+    <p class="tl-posted">posted at <a href="http://twitter.com/kazuhito_m/status/539422101841530881" target="_blank">23:13:45</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141201','539422101841530881',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539358369639694339">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539358369639694339" target="_blank">12月1日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/kazuhito_m" target="_blank"><img src="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/kazuhito_m" target="_blank"><strong>三浦カズヒト(苗字が”ズラ井”に決定)</strong><span>@kazuhito_m</span></a></p>
+    <p class="tl-text">あと４日しかない…がんばっ！</p>
+
+    <p class="tl-posted">posted at <a href="http://twitter.com/kazuhito_m/status/539358369639694339" target="_blank">19:00:30</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141201','539358369639694339',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539273186336993280">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539273186336993280" target="_blank">12月1日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/kazuhito_m" target="_blank"><img src="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/kazuhito_m" target="_blank"><strong>三浦カズヒト(苗字が”ズラ井”に決定)</strong><span>@kazuhito_m</span></a></p>
+    <p class="tl-text">ここで出てくる「みうみう」って、一体誰なんですかねぇ…。（白目 -  WindowsでのHubotのインストール手順 Hubot@2.9.3 - HIDARI日記（右） <a href="http://t.co/lKv3uTLYpI" target="_blank" title="http://hidari-lab.hatenablog.com/entry/2014/11/23/215656"><span class="invisible">http://</span>hidari-lab.hatenablog.com/entry/2014/11/<span class="invisible">3/215656</span>…</a></p>
+
+    <p class="tl-posted">posted at <a href="http://twitter.com/kazuhito_m/status/539273186336993280" target="_blank">13:22:01</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141201','539273186336993280',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539117019040194560">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539117019040194560" target="_blank">12月1日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/kazuhito_m" target="_blank"><img src="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/kazuhito_m" target="_blank"><strong>三浦カズヒト(苗字が”ズラ井”に決定)</strong><span>@kazuhito_m</span></a></p>
+    <p class="tl-text">「風評コンサルタント」って…そういうのもあるのか。</p>
+
+    <p class="tl-posted">posted at <a href="http://twitter.com/kazuhito_m/status/539117019040194560" target="_blank">03:01:28</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141201','539117019040194560',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539098016615919616">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539098016615919616" target="_blank">12月1日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/kazuhito_m" target="_blank"><img src="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/kazuhito_m" target="_blank"><strong>三浦カズヒト(苗字が”ズラ井”に決定)</strong><span>@kazuhito_m</span></a></p>
+    <p class="tl-text">俺もニワカだけど、<br><br>「(日本が構想する)リニアモーター鉄道には<br>・マグレブ<br>・HSST<br>という二種類が主なものである」<br><br>くらいは知ってるつもり。</p>
+
+    <p class="tl-posted">posted at <a href="http://twitter.com/kazuhito_m/status/539098016615919616" target="_blank">01:45:57</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141201','539098016615919616',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539096402677075968">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539096402677075968" target="_blank">12月1日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/shiiiiiiiro" target="_blank"><img src="http://pbs.twimg.com/profile_images/496489032356872192/var3uzsf_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/shiiiiiiiro" target="_blank"><strong>しろ</strong><span>@shiiiiiiiro</span></a></p>
+    <p class="tl-text"> ヌマクロー好きだけどDTMもやりたい！って人のための画像作った <span class="invisible">https://</span><a href="http://t.co/nzlo12jFYr" target="_blank">pic.twitter.com/nzlo12jFYr</a><p class="tl-retweet">Retweeted by <a href="https://twitter.com/kazuhito_m" target="_blank">三浦カズヒト(苗字が”ズラ井”に決定)</a></p></p>
+
+    <p class="tl-posted">retweeted at <a href="http://twitter.com/kazuhito_m/status/539096402677075968" target="_blank">01:39:32</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141201','539096402677075968',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet">
+    <p class="tl-time">&nbsp;</p>
+    <p class="tl-icon"><img src="http://a0.twimg.com/sticky/default_profile_images/default_profile_2_normal.png" width="48" height="48"></p>
+    <p class="tl-name">公開拒否</p>
+    <p class="tl-text"></p>
+
+    <p class="tl-posted">retweeted at xx:xx:xx　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141201','539094813790834688',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet">
+    <p class="tl-time">&nbsp;</p>
+    <p class="tl-icon"><img src="http://a0.twimg.com/sticky/default_profile_images/default_profile_2_normal.png" width="48" height="48"></p>
+    <p class="tl-name">公開拒否</p>
+    <p class="tl-text"></p>
+
+    <p class="tl-posted">retweeted at xx:xx:xx　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141201','539094795126194177',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet">
+    <p class="tl-time">&nbsp;</p>
+    <p class="tl-icon"><img src="http://a0.twimg.com/sticky/default_profile_images/default_profile_2_normal.png" width="48" height="48"></p>
+    <p class="tl-name">公開拒否</p>
+    <p class="tl-text"></p>
+
+    <p class="tl-posted">retweeted at xx:xx:xx　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141201','539094696560041985',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet">
+    <p class="tl-time">&nbsp;</p>
+    <p class="tl-icon"><img src="http://a0.twimg.com/sticky/default_profile_images/default_profile_2_normal.png" width="48" height="48"></p>
+    <p class="tl-name">公開拒否</p>
+    <p class="tl-text"></p>
+
+    <p class="tl-posted">retweeted at xx:xx:xx　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141201','539094679787012096',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539094337024319488">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539094337024319488" target="_blank">12月1日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/kazuhito_m" target="_blank"><img src="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/kazuhito_m" target="_blank"><strong>三浦カズヒト(苗字が”ズラ井”に決定)</strong><span>@kazuhito_m</span></a></p>
+    <p class="tl-text">どう考えても正論なんだよなぁ。 叩いてるヤツは「あぶり出しに引っかかってる反日左翼」なんじゃね？ &gt; RT</p>
+
+    <p class="tl-posted">posted at <a href="http://twitter.com/kazuhito_m/status/539094337024319488" target="_blank">01:31:20</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141201','539094337024319488',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet">
+    <p class="tl-time">&nbsp;</p>
+    <p class="tl-icon"><img src="http://a0.twimg.com/sticky/default_profile_images/default_profile_2_normal.png" width="48" height="48"></p>
+    <p class="tl-name">公開拒否</p>
+    <p class="tl-text"></p>
+
+    <p class="tl-posted">retweeted at xx:xx:xx　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141201','539094149853491200',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539093405679116288">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539093405679116288" target="_blank">12月1日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/kazuhito_m" target="_blank"><img src="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/kazuhito_m" target="_blank"><strong>三浦カズヒト(苗字が”ズラ井”に決定)</strong><span>@kazuhito_m</span></a></p>
+    <p class="tl-text"><a href="https://twitter.com/fukanoya" target="_blank">@fukanoya</a> ちょｗ クロウカードをそんな漢字あてるんじゃないｗ <a href="https://twitter.com/search?q=%23%E3%81%BE%E3%81%A3%E3%82%88%E3%81%A3%E3%82%8F%E3%81%AA%E3%81%A3%E3%81%84" target="_blank">#まっよっわなっい</a></p>
+
+    <p class="tl-posted">posted at <a href="http://twitter.com/kazuhito_m/status/539093405679116288" target="_blank">01:27:38</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141201','539093405679116288',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539091337379708928">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539091337379708928" target="_blank">12月1日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/kazuhito_m" target="_blank"><img src="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/kazuhito_m" target="_blank"><strong>三浦カズヒト(苗字が”ズラ井”に決定)</strong><span>@kazuhito_m</span></a></p>
+    <p class="tl-text"><a href="https://twitter.com/fukanoya" target="_blank">@fukanoya</a> そうか！ じゃあ「版権持ってるトコ」見つけて、叩けばいいんだねっ！ <a href="https://twitter.com/search?q=%23%E3%81%9D%E3%81%86%E3%81%84%E3%81%86%E3%81%93%E3%81%A8%E3%81%98%E3%82%83%E3%81%AA%E3%81%84" target="_blank">#そういうことじゃない</a></p>
+
+    <p class="tl-posted">posted at <a href="http://twitter.com/kazuhito_m/status/539091337379708928" target="_blank">01:19:25</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141201','539091337379708928',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539090756288266240">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539090756288266240" target="_blank">12月1日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/kazuhito_m" target="_blank"><img src="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/kazuhito_m" target="_blank"><strong>三浦カズヒト(苗字が”ズラ井”に決定)</strong><span>@kazuhito_m</span></a></p>
+    <p class="tl-text">「マグレブ」つって「ああ、リニアモーターカー(列車)のことね」って即答する人って、どれくらいいんのかねぇ。</p>
+
+    <p class="tl-posted">posted at <a href="http://twitter.com/kazuhito_m/status/539090756288266240" target="_blank">01:17:06</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141201','539090756288266240',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539088127881523201">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539088127881523201" target="_blank">12月1日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/kazuhito_m" target="_blank"><img src="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/kazuhito_m" target="_blank"><strong>三浦カズヒト(苗字が”ズラ井”に決定)</strong><span>@kazuhito_m</span></a></p>
+    <p class="tl-text"><a href="https://twitter.com/kunst1080" target="_blank">@kunst1080</a> あっはっは！ そうですよねｗ あ、そう言えばウチ、Linuxしか無いですねぇ。 (ﾆﾔﾆﾔ <a href="https://twitter.com/search?q=%23%E5%AE%9F%E5%9C%A8" target="_blank">#実在</a></p>
+
+    <p class="tl-posted">posted at <a href="http://twitter.com/kazuhito_m/status/539088127881523201" target="_blank">01:06:40</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141201','539088127881523201',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539087945395752960">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539087945395752960" target="_blank">12月1日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/kazuhito_m" target="_blank"><img src="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/kazuhito_m" target="_blank"><strong>三浦カズヒト(苗字が”ズラ井”に決定)</strong><span>@kazuhito_m</span></a></p>
+    <p class="tl-text">う、うーん…。なんなく「やめといたほうがいいんじゃ…」感もしないでもないし、ファンが「さらなる盛り上がりのために！」ってんなら、意味あるのかもしれんけど…。 &gt; RT</p>
+
+    <p class="tl-posted">posted at <a href="http://twitter.com/kazuhito_m/status/539087945395752960" target="_blank">01:05:56</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141201','539087945395752960',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539087717812797440">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539087717812797440" target="_blank">12月1日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/3000favs_BOT" target="_blank"><img src="http://pbs.twimg.com/profile_images/3589314180/33209f000818c7eae6257d36eb477bea_normal.png" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/3000favs_BOT" target="_blank"><strong>3000ふぁぼ（・∀・）</strong><span>@3000favs_BOT</span></a></p>
+    <p class="tl-text"> あのNHKの伝説アニメカードキャプターさくらがリメイクするそうです Go_ya155 <span class="invisible">https://</span><a href="http://t.co/Vjqzm6YRe9" target="_blank">pic.twitter.com/Vjqzm6YRe9</a><p class="tl-retweet">Retweeted by <a href="https://twitter.com/kazuhito_m" target="_blank">三浦カズヒト(苗字が”ズラ井”に決定)</a></p></p>
+
+    <p class="tl-posted">retweeted at <a href="http://twitter.com/kazuhito_m/status/539087717812797440" target="_blank">01:05:02</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141201','539087717812797440',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539086972157829120">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539086972157829120" target="_blank">12月1日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/kazuhito_m" target="_blank"><img src="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/kazuhito_m" target="_blank"><strong>三浦カズヒト(苗字が”ズラ井”に決定)</strong><span>@kazuhito_m</span></a></p>
+    <p class="tl-text"><a href="https://twitter.com/kunst1080" target="_blank">@kunst1080</a> ありがとうございます！ んじゃ、日常生活で「ウチはふりびしかないからなぁ(嬉々として」みたいな人材になって下さい！ <a href="https://twitter.com/search?q=%23%E3%81%99%E3%81%B9%E3%81%A6%E3%81%AF%E3%81%8A%E5%89%8D%E3%81%AE%E3%82%A8%E3%82%B4%E3%81%98%E3%82%83%E3%81%AD%E3%83%BC%E3%81%8B%EF%BD%97" target="_blank">#すべてはお前のエゴじゃねーかｗ</a></p>
+
+    <p class="tl-posted">posted at <a href="http://twitter.com/kazuhito_m/status/539086972157829120" target="_blank">01:02:04</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141201','539086972157829120',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet">
+    <p class="tl-time">&nbsp;</p>
+    <p class="tl-icon"><img src="http://a0.twimg.com/sticky/default_profile_images/default_profile_2_normal.png" width="48" height="48"></p>
+    <p class="tl-name">公開拒否</p>
+    <p class="tl-text"></p>
+
+    <p class="tl-posted">retweeted at xx:xx:xx　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141201','539086749100548096',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539086657786740737">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539086657786740737" target="_blank">12月1日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/kazuhito_m" target="_blank"><img src="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/kazuhito_m" target="_blank"><strong>三浦カズヒト(苗字が”ズラ井”に決定)</strong><span>@kazuhito_m</span></a></p>
+    <p class="tl-text">鍵垢って、「その人をフォローしないかぎり、他人様からは『なんかひとりごとを壁に向かってしている人』みたいな写り方、するんだっけか？</p>
+
+    <p class="tl-posted">posted at <a href="http://twitter.com/kazuhito_m/status/539086657786740737" target="_blank">01:00:49</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141201','539086657786740737',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539085727540060160">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539085727540060160" target="_blank">12月1日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/syuu1228" target="_blank"><img src="http://pbs.twimg.com/profile_images/507951352689860608/6x3p98F-_normal.png" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/syuu1228" target="_blank"><strong>しゅううさん</strong><span>@syuu1228</span></a></p>
+    <p class="tl-text"> “USBあったかオニギリウォーマー” <a href="http://t.co/7azpvCBo6y" target="_blank" title="http://akiba-pc.watch.impress.co.jp/docs/news/news/20141130_678190.html"><span class="invisible">http://</span>akiba-pc.watch.impress.co.jp/docs/news/news<span class="invisible">20141130_678190.html</span>…</a><p class="tl-retweet">Retweeted by <a href="https://twitter.com/kazuhito_m" target="_blank">三浦カズヒト(苗字が”ズラ井”に決定)</a></p></p>
+
+    <p class="tl-posted">retweeted at <a href="http://twitter.com/kazuhito_m/status/539085727540060160" target="_blank">00:57:07</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141201','539085727540060160',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539085634078375936">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539085634078375936" target="_blank">12月1日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/shoko_1994" target="_blank"><img src="http://pbs.twimg.com/profile_images/344513261566745634/a1637d99152b0fe9ff707c7145ad4dfd_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/shoko_1994" target="_blank"><strong>shoko_1994</strong><span>@shoko_1994</span></a></p>
+    <p class="tl-text"> 慶応大学にAO入試で合格した斎木陽平さんの自己推薦状。このような推薦状でが合格した人より、こつこつ受験勉強をして合格した人の方を尊重する大学であってほしいです。 <span class="invisible">https://</span><a href="http://t.co/DTlRFqL5zr" target="_blank">pic.twitter.com/DTlRFqL5zr</a><p class="tl-retweet">Retweeted by <a href="https://twitter.com/kazuhito_m" target="_blank">三浦カズヒト(苗字が”ズラ井”に決定)</a></p></p>
+
+    <p class="tl-posted">retweeted at <a href="http://twitter.com/kazuhito_m/status/539085634078375936" target="_blank">00:56:45</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141201','539085634078375936',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539085087187279872">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539085087187279872" target="_blank">12月1日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/kazuhito_m" target="_blank"><img src="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/kazuhito_m" target="_blank"><strong>三浦カズヒト(苗字が”ズラ井”に決定)</strong><span>@kazuhito_m</span></a></p>
+    <p class="tl-text">ど、どういうシチュのどういう絵なんだｗ &gt; RT</p>
+
+    <p class="tl-posted">posted at <a href="http://twitter.com/kazuhito_m/status/539085087187279872" target="_blank">00:54:35</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141201','539085087187279872',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539085009408122880">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539085009408122880" target="_blank">12月1日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/mapiovip" target="_blank"><img src="http://pbs.twimg.com/profile_images/539715055474843649/8jrkfqct_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/mapiovip" target="_blank"><strong>豊中のタテシュンって誰やねん</strong><span>@mapiovip</span></a></p>
+    <p class="tl-text"> 久しぶりに人間の限界をみた。 <span class="invisible">https://</span><a href="http://t.co/Iql9FGGLBj" target="_blank">pic.twitter.com/Iql9FGGLBj</a><p class="tl-retweet">Retweeted by <a href="https://twitter.com/kazuhito_m" target="_blank">三浦カズヒト(苗字が”ズラ井”に決定)</a></p></p>
+
+    <p class="tl-posted">retweeted at <a href="http://twitter.com/kazuhito_m/status/539085009408122880" target="_blank">00:54:16</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141201','539085009408122880',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539081123284799489">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539081123284799489" target="_blank">12月1日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/saiculture" target="_blank"><img src="http://pbs.twimg.com/profile_images/3191760848/3c92aa4cd95ff9e39cb0ea5c9bc31252_normal.png" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/saiculture" target="_blank"><strong>さい</strong><span>@saiculture</span></a></p>
+    <p class="tl-text"> 柑橘類の内部構造 <span class="invisible">https://</span><a href="http://t.co/VxHxsl8ArD" target="_blank">pic.twitter.com/VxHxsl8ArD</a><p class="tl-retweet">Retweeted by <a href="https://twitter.com/kazuhito_m" target="_blank">三浦カズヒト(苗字が”ズラ井”に決定)</a></p></p>
+
+    <p class="tl-posted">retweeted at <a href="http://twitter.com/kazuhito_m/status/539081123284799489" target="_blank">00:38:50</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141201','539081123284799489',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539075856392404994">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539075856392404994" target="_blank">12月1日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/kazuhito_m" target="_blank"><img src="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/kazuhito_m" target="_blank"><strong>三浦カズヒト(苗字が”ズラ井”に決定)</strong><span>@kazuhito_m</span></a></p>
+    <p class="tl-text"><a href="https://twitter.com/mil_memory" target="_blank">@mil_memory</a> えっ！ あはは…は。 <a href="https://twitter.com/search?q=%23%E3%83%A4%E3%83%90%E3%82%A4%E3%81%A9%E3%81%A3%E3%81%A1%E3%82%82%E3%82%A4%E3%83%A4%E3%82%84%EF%BD%97" target="_blank">#ヤバイどっちもイヤやｗ</a></p>
+
+    <p class="tl-posted">posted at <a href="http://twitter.com/kazuhito_m/status/539075856392404994" target="_blank">00:17:54</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141201','539075856392404994',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539074816511201281">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539074816511201281" target="_blank">12月1日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/kazuhito_m" target="_blank"><img src="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/kazuhito_m" target="_blank"><strong>三浦カズヒト(苗字が”ズラ井”に決定)</strong><span>@kazuhito_m</span></a></p>
+    <p class="tl-text"><a href="https://twitter.com/mil_memory" target="_blank">@mil_memory</a> おう！ 食え食え！ 買うちゃる買うちゃる！ｗｗ <a href="https://twitter.com/search?q=%23%E5%89%9B%E6%B0%97%E3%81%AA%E3%82%A4%E3%83%A1%E3%83%BC%E3%82%B8%E3%82%92%E5%87%BA%E3%81%9D%E3%81%86%E3%81%A8%E3%81%99%E3%82%8B%E3%81%A8%E6%80%A5%E3%81%AB%E7%A4%BE%E9%95%B7%E3%81%AB%E3%81%AA%E3%82%8B%E8%B2%A7%E7%9B%B8%E3%81%AA%E3%82%A4%E3%83%A1%E3%83%BC%E3%82%B8%E5%8A%9B" target="_blank">#剛気なイメージを出そうとすると急に社長になる貧相なイメージ力</a></p>
+
+    <p class="tl-posted">posted at <a href="http://twitter.com/kazuhito_m/status/539074816511201281" target="_blank">00:13:46</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141201','539074816511201281',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539074212833402882">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539074212833402882" target="_blank">12月1日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/kazuhito_m" target="_blank"><img src="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/kazuhito_m" target="_blank"><strong>三浦カズヒト(苗字が”ズラ井”に決定)</strong><span>@kazuhito_m</span></a></p>
+    <p class="tl-text"><a href="https://twitter.com/mil_memory" target="_blank">@mil_memory</a> どこいくんや？！ｗ</p>
+
+    <p class="tl-posted">posted at <a href="http://twitter.com/kazuhito_m/status/539074212833402882" target="_blank">00:11:22</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141201','539074212833402882',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539073629200211968">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539073629200211968" target="_blank">12月1日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/Story_terror" target="_blank"><img src="http://pbs.twimg.com/profile_images/1713437829/6419633_s_normal.jpg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/Story_terror" target="_blank"><strong>すてら（公式アカウント）</strong><span>@Story_terror</span></a></p>
+    <p class="tl-text"> 14年かけて一等米を作っちゃうアイドル <span class="invisible">https://</span><a href="http://t.co/Rv98EOiEfV" target="_blank">pic.twitter.com/Rv98EOiEfV</a><p class="tl-retweet">Retweeted by <a href="https://twitter.com/kazuhito_m" target="_blank">三浦カズヒト(苗字が”ズラ井”に決定)</a></p></p>
+
+    <p class="tl-posted">retweeted at <a href="http://twitter.com/kazuhito_m/status/539073629200211968" target="_blank">00:09:03</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141201','539073629200211968',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539072870245072897">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539072870245072897" target="_blank">12月1日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/kazuhito_m" target="_blank"><img src="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/kazuhito_m" target="_blank"><strong>三浦カズヒト(苗字が”ズラ井”に決定)</strong><span>@kazuhito_m</span></a></p>
+    <p class="tl-text"><a href="https://twitter.com/jyukutyo" target="_blank">@jyukutyo</a> おめでとうございます！ <a href="https://twitter.com/search?q=%23%E3%81%95%E3%81%99%E3%81%8C%E6%9C%89%E9%99%90%E5%AE%9F%E8%A1%8C%E3%81%AE%E6%BC%A2%E3%82%84%E3%81%A7%E3%81%A3%EF%BD%97" target="_blank">#さすが有限実行の漢やでっｗ</a></p>
+
+    <p class="tl-posted">posted at <a href="http://twitter.com/kazuhito_m/status/539072870245072897" target="_blank">00:06:02</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141201','539072870245072897',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539072775814524928">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539072775814524928" target="_blank">12月1日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/jyukutyo" target="_blank"><img src="http://pbs.twimg.com/profile_images/2149424205/sakata2_normal.png" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/jyukutyo" target="_blank"><strong>Koichi Sakata</strong><span>@jyukutyo</span></a></p>
+    <p class="tl-text"> はてなブログに投稿しました<br>関ジャバがJUGsに仲間入りしました！ - Fight the Future<br><a href="http://t.co/JMdiyzWGWs" target="_blank" title="http://jyukutyo.hatenablog.com/entry/2014/11/29/110024"><span class="invisible">http://</span>jyukutyo.hatenablog.com/entry/2014/11/<span class="invisible">9/110024</span>…</a> <span class="invisible">https://</span><a href="http://t.co/J8IrM0OKG8" target="_blank">pic.twitter.com/J8IrM0OKG8</a><p class="tl-retweet">Retweeted by <a href="https://twitter.com/kazuhito_m" target="_blank">三浦カズヒト(苗字が”ズラ井”に決定)</a></p></p>
+
+    <p class="tl-posted">retweeted at <a href="http://twitter.com/kazuhito_m/status/539072775814524928" target="_blank">00:05:39</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141201','539072775814524928',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539072541021974530">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539072541021974530" target="_blank">12月1日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/kazuhito_m" target="_blank"><img src="http://pbs.twimg.com/profile_images/520898045609652225/SUczLY_e_normal.jpeg" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/kazuhito_m" target="_blank"><strong>三浦カズヒト(苗字が”ズラ井”に決定)</strong><span>@kazuhito_m</span></a></p>
+    <p class="tl-text">これ…ほしいなぁ。 <a href="https://twitter.com/search?q=%23%E3%82%A2%E3%83%88%E3%83%94%E3%83%BC%E6%80%A7%E7%9A%AE%E8%86%9A%E7%82%8E%E7%9A%84%E3%81%AB" target="_blank">#アトピー性皮膚炎的に</a></p>
+
+    <p class="tl-posted">posted at <a href="http://twitter.com/kazuhito_m/status/539072541021974530" target="_blank">00:04:43</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141201','539072541021974530',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+<article class="tl-tweet" id="tw539072485476401152">
+    <p class="tl-time"><a href="http://twitter.com/kazuhito_m/status/539072485476401152" target="_blank">12月1日</a></p>
+    <p class="tl-icon"><a href="http://twitter.com/watch_akiba" target="_blank"><img src="http://pbs.twimg.com/profile_images/455600714769641472/ElfRdAB7_normal.png" alt="@kazuhito_m" width="48" height="48"></a></p>
+    <p class="tl-name"><a href="http://twitter.com/watch_akiba" target="_blank"><strong>AKIBA PC Hotline!</strong><span>@watch_akiba</span></a></p>
+    <p class="tl-text"> 更新：近未来風な強化ガラスキーボードのサンプルが入荷、タッチ式で物理キー無し 厚さはわずか5mm <a href="http://t.co/lejiH7RQIv" target="_blank" title="http://akiba-pc.watch.impress.co.jp/docs/news/news/20141201_678222.html"><span class="invisible">http://</span>akiba-pc.watch.impress.co.jp/docs/news/news<span class="invisible">20141201_678222.html</span>…</a> <span class="invisible">https://</span><a href="http://t.co/oi9YrqLnYS" target="_blank">pic.twitter.com/oi9YrqLnYS</a><p class="tl-retweet">Retweeted by <a href="https://twitter.com/kazuhito_m" target="_blank">三浦カズヒト(苗字が”ズラ井”に決定)</a></p></p>
+
+    <p class="tl-posted">retweeted at <a href="http://twitter.com/kazuhito_m/status/539072485476401152" target="_blank">00:04:30</a>　<span class="tl-del"><a href="javascript:void(0)" onclick="delete_tweet('141201','539072485476401152',this)">削除</a></span></p>
+</article><!-- /tl-tweet -->
+
+
+</section><!-- /tl-tweets -->
+
+
+<ul class="nav-link mb10 mt0">
+    <li class="nav-prev"><span>前のページ</span></li>
+    <li class="nav-user"><a href="http://twilog.org/kazuhito_m">@kazuhito_m</a></li>
+    <li class="nav-next"><a href="http://twilog.org/kazuhito_m/2">次のページ</a></li>
+</ul>
+
+
+
+<div class="ta-c" style="margin:25px auto">
+    <script type="text/javascript"><!--
+google_ad_client = "ca-pub-2613098592193304";
+/* Twilog ボトムレクタングル */
+google_ad_slot = "4924708346";
+google_ad_width = 336;
+google_ad_height = 280;
+google_ad_region = "main-bottom";
+google_color_link = "0084B4";
+//-->
+</script>
+    <script type="text/javascript"
+            src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+    </script>
+
+</div>
+
+
+
+
+<img src="http://ad.twi-log.com/img-dir/kk5-1t94.gif" style="width:1px;height:1px;">
+
+</div><!-- /content -->
+
+<aside id="sidebar">
+
+    <section class="sidebox sidebox-update">
+        <form id="uf" action="http://twilog.org/update.rb" method="get">
+            <input type="submit" id="ub" value="最新の情報に更新する">
+            <input type="hidden" name="id" value="kazuhito_m">
+            <input type="hidden" name="order" value="">
+            <input type="hidden" name="filter" value="">
+            <input type="hidden" name="kind" value="reg">
+        </form>
+        <p><span>last update 12/04 18:35</span></p>
+    </section>
+
+    <script type="text/javascript"><!--
+google_ad_client = "ca-pub-2613098592193304";
+/* Twilog サイド300x250 */
+google_ad_slot = "1706159544";
+google_ad_width = 300;
+google_ad_height = 250;
+google_ad_region = "side";
+//-->
+</script>
+    <script type="text/javascript"
+            src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+    </script>
+
+
+    <section class="sidebox sidebox-search">
+        <h2 class="side-title">Search</h2>
+        <div class="side-pd">
+            <!-- -->
+            <form id="wsearch" action="http://twilog.org/tl-tweets.rb" method="get" onsubmit="word_search();return false;">
+                <input type="hidden" name="id" value="kazuhito_m">
+                <input type="hidden" name="param" value="desc">
+                <input type="text" id="sch-word" name="word" value="" placeholder="ツイート検索" class="input01">
+                <input type="submit" value="検索" class="submit01">
+                <div id="search-opt">
+                    <p class="ta-c mb0">
+                        <input type="radio" id="ao-a" name="ao" value="a" checked> <label for="ao-a">AND検索</label>　
+                        <input type="radio" id="ao-o" name="ao" value="o"> <label for="ao-o">OR検索</label>
+                    </p>
+                    <!-- -->
+                </div>
+            </form>
+        </div><!-- /side-pd -->
+    </section>
+
+    <section class="sidebox sidebox-cal">
+        <p class="cal-title">2014年12月</p>
+        <ul class="cal-nav">
+            <li class="ic-arrow-l"><a href="http://twilog.org/kazuhito_m/month-1411">前の月へ</a></li>
+            <li class="ic-arrow-r"><span>次の月へ</span></li>
+        </ul>
+        <table id="cal">
+            <tr><th>月</th><th>火</th><th>水</th><th>木</th><th>金</th><th>土</th><th>日</th></tr>
+            <tr><td><a href="http://twilog.org/kazuhito_m/date-141201">1</a></td><td><a href="http://twilog.org/kazuhito_m/date-141202">2</a></td><td><a href="http://twilog.org/kazuhito_m/date-141203">3</a></td><td><a href="http://twilog.org/kazuhito_m/date-141204">4</a></td><td>5</td><td>6</td><td>7</td></tr>
+            <tr><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td></tr>
+            <tr><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td></tr>
+            <tr><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td></tr>
+            <tr><td>29</td><td>30</td><td>31</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+        </table>
+        <p class="cal-link"><a href="http://twilog.org/kazuhito_m/date-131204">1年前の今日のツイートを見る</a></p>
+
+    </section>
+
+    <section class="sidebox">
+        <h2 class="side-title">Recent</h2>
+        <ul class="side-list wide">
+            <li><a href="http://twilog.org/kazuhito_m/date-141204">12月04日(木) <span>2</span></a></li>
+            <li><a href="http://twilog.org/kazuhito_m/date-141203">12月03日(水) <span>2</span></a></li>
+            <li><a href="http://twilog.org/kazuhito_m/date-141202">12月02日(火) <span>28</span></a></li>
+            <li><a href="http://twilog.org/kazuhito_m/date-141201">12月01日(月) <span>34</span></a></li>
+            <li><a href="http://twilog.org/kazuhito_m/date-141130">11月30日(日) <span>62</span></a></li>
+            <li><a href="http://twilog.org/kazuhito_m/date-141129">11月29日(土) <span>34</span></a></li>
+            <li><a href="http://twilog.org/kazuhito_m/date-141128">11月28日(金) <span>17</span></a></li>
+            <li><a href="http://twilog.org/kazuhito_m/date-141127">11月27日(木) <span>50</span></a></li>
+            <li><a href="http://twilog.org/kazuhito_m/date-141126">11月26日(水) <span>79</span></a></li>
+            <li><a href="http://twilog.org/kazuhito_m/date-141125">11月25日(火) <span>21</span></a></li>
+
+        </ul>
+        <p class="side-more">&nbsp;</p>
+    </section>
+
+
+    <section class="sidebox">
+        <h2 class="side-title">Archives</h2>
+        <ul class="side-list">
+            <li><a href="http://twilog.org/kazuhito_m/monthlist-1412" class="side-list-icon" title="日別ツイート一覧"><img src="http://img.twi-log.com/img-dir/user-ic-list.png" alt="" width="27" height="18"></a><a href="http://twilog.org/kazuhito_m/month-1412">2014年12月<span>66</span></a></li><li><a href="http://twilog.org/kazuhito_m/monthlist-1411" class="side-list-icon" title="日別ツイート一覧"><img src="http://img.twi-log.com/img-dir/user-ic-list.png" alt="" width="27" height="18"></a><a href="http://twilog.org/kazuhito_m/month-1411">2014年11月<span>1654</span></a></li><li><a href="http://twilog.org/kazuhito_m/monthlist-1410" class="side-list-icon" title="日別ツイート一覧"><img src="http://img.twi-log.com/img-dir/user-ic-list.png" alt="" width="27" height="18"></a><a href="http://twilog.org/kazuhito_m/month-1410">2014年10月<span>2337</span></a></li><li><a href="http://twilog.org/kazuhito_m/monthlist-1409" class="side-list-icon" title="日別ツイート一覧"><img src="http://img.twi-log.com/img-dir/user-ic-list.png" alt="" width="27" height="18"></a><a href="http://twilog.org/kazuhito_m/month-1409">2014年09月<span>1755</span></a></li><li><a href="http://twilog.org/kazuhito_m/monthlist-1408" class="side-list-icon" title="日別ツイート一覧"><img src="http://img.twi-log.com/img-dir/user-ic-list.png" alt="" width="27" height="18"></a><a href="http://twilog.org/kazuhito_m/month-1408">2014年08月<span>1926</span></a></li><li><a href="http://twilog.org/kazuhito_m/monthlist-1407" class="side-list-icon" title="日別ツイート一覧"><img src="http://img.twi-log.com/img-dir/user-ic-list.png" alt="" width="27" height="18"></a><a href="http://twilog.org/kazuhito_m/month-1407">2014年07月<span>1956</span></a></li><li><a href="http://twilog.org/kazuhito_m/monthlist-1406" class="side-list-icon" title="日別ツイート一覧"><img src="http://img.twi-log.com/img-dir/user-ic-list.png" alt="" width="27" height="18"></a><a href="http://twilog.org/kazuhito_m/month-1406">2014年06月<span>2549</span></a></li><li><a href="http://twilog.org/kazuhito_m/monthlist-1405" class="side-list-icon" title="日別ツイート一覧"><img src="http://img.twi-log.com/img-dir/user-ic-list.png" alt="" width="27" height="18"></a><a href="http://twilog.org/kazuhito_m/month-1405">2014年05月<span>2920</span></a></li><li><a href="http://twilog.org/kazuhito_m/monthlist-1404" class="side-list-icon" title="日別ツイート一覧"><img src="http://img.twi-log.com/img-dir/user-ic-list.png" alt="" width="27" height="18"></a><a href="http://twilog.org/kazuhito_m/month-1404">2014年04月<span>2087</span></a></li><li><a href="http://twilog.org/kazuhito_m/monthlist-1403" class="side-list-icon" title="日別ツイート一覧"><img src="http://img.twi-log.com/img-dir/user-ic-list.png" alt="" width="27" height="18"></a><a href="http://twilog.org/kazuhito_m/month-1403">2014年03月<span>1919</span></a></li><li><a href="http://twilog.org/kazuhito_m/monthlist-1402" class="side-list-icon" title="日別ツイート一覧"><img src="http://img.twi-log.com/img-dir/user-ic-list.png" alt="" width="27" height="18"></a><a href="http://twilog.org/kazuhito_m/month-1402">2014年02月<span>1514</span></a></li><li><a href="http://twilog.org/kazuhito_m/monthlist-1401" class="side-list-icon" title="日別ツイート一覧"><img src="http://img.twi-log.com/img-dir/user-ic-list.png" alt="" width="27" height="18"></a><a href="http://twilog.org/kazuhito_m/month-1401">2014年01月<span>1696</span></a></li><li><a href="http://twilog.org/kazuhito_m/monthlist-1312" class="side-list-icon" title="日別ツイート一覧"><img src="http://img.twi-log.com/img-dir/user-ic-list.png" alt="" width="27" height="18"></a><a href="http://twilog.org/kazuhito_m/month-1312">2013年12月<span>1473</span></a></li><li><a href="http://twilog.org/kazuhito_m/monthlist-1311" class="side-list-icon" title="日別ツイート一覧"><img src="http://img.twi-log.com/img-dir/user-ic-list.png" alt="" width="27" height="18"></a><a href="http://twilog.org/kazuhito_m/month-1311">2013年11月<span>1876</span></a></li><li><a href="http://twilog.org/kazuhito_m/monthlist-1310" class="side-list-icon" title="日別ツイート一覧"><img src="http://img.twi-log.com/img-dir/user-ic-list.png" alt="" width="27" height="18"></a><a href="http://twilog.org/kazuhito_m/month-1310">2013年10月<span>1744</span></a></li>
+        </ul>
+        <p class="side-more"><a href="http://twilog.org/kazuhito_m/archives">すべて表示 &raquo;</a></p>
+    </section>
+
+
+    <section class="sidebox">
+        <h2 class="side-title">Friends</h2>
+        <ul class="side-list">
+            <li><a href="http://twilog.org/backpaper0" class="side-list-icon" title="このユーザーのTwilogへ"><img src="http://img.twi-log.com/img-dir/user-ic-user.png" alt="" width="27" height="18"></a><a href="http://twilog.org/kazuhito_m/friends-backpaper0">@backpaper0<span>2184</span></a></li>
+            <li><a href="http://twilog.org/tan_go238" class="side-list-icon" title="このユーザーのTwilogへ"><img src="http://img.twi-log.com/img-dir/user-ic-user.png" alt="" width="27" height="18"></a><a href="http://twilog.org/kazuhito_m/friends-tan_go238">@tan_go238<span>1905</span></a></li>
+            <li><a href="http://twilog.org/iso2022jp" class="side-list-icon" title="このユーザーのTwilogへ"><img src="http://img.twi-log.com/img-dir/user-ic-user.png" alt="" width="27" height="18"></a><a href="http://twilog.org/kazuhito_m/friends-iso2022jp">@iso2022jp<span>1585</span></a></li>
+            <li><a href="http://twilog.org/irof" class="side-list-icon" title="このユーザーのTwilogへ"><img src="http://img.twi-log.com/img-dir/user-ic-user.png" alt="" width="27" height="18"></a><a href="http://twilog.org/kazuhito_m/friends-irof">@irof<span>1578</span></a></li>
+            <li><a href="http://twilog.org/tmybj" class="side-list-icon" title="このユーザーのTwilogへ"><img src="http://img.twi-log.com/img-dir/user-ic-user.png" alt="" width="27" height="18"></a><a href="http://twilog.org/kazuhito_m/friends-tmybj">@tmybj<span>1371</span></a></li>
+            <li><a href="http://twilog.org/daiksy" class="side-list-icon" title="このユーザーのTwilogへ"><img src="http://img.twi-log.com/img-dir/user-ic-user.png" alt="" width="27" height="18"></a><a href="http://twilog.org/kazuhito_m/friends-daiksy">@daiksy<span>1097</span></a></li>
+            <li><span class="side-list-noicon"><img src="http://img.twi-log.com/img-dir/user-ic-user.png" alt="" width="27" height="18"></span><a href="http://twilog.org/kazuhito_m/friends-White_Raven777">@White_Raven777<span>901</span></a></li>
+            <li><span class="side-list-noicon"><img src="http://img.twi-log.com/img-dir/user-ic-user.png" alt="" width="27" height="18"></span><a href="http://twilog.org/kazuhito_m/friends-yukieen">@yukieen<span>852</span></a></li>
+            <li><a href="http://twilog.org/datsuns" class="side-list-icon" title="このユーザーのTwilogへ"><img src="http://img.twi-log.com/img-dir/user-ic-user.png" alt="" width="27" height="18"></a><a href="http://twilog.org/kazuhito_m/friends-datsuns">@datsuns<span>760</span></a></li>
+            <li><span class="side-list-noicon"><img src="http://img.twi-log.com/img-dir/user-ic-user.png" alt="" width="27" height="18"></span><a href="http://twilog.org/kazuhito_m/friends-pnd75">@pnd75<span>752</span></a></li>
+            <li><span class="side-list-noicon"><img src="http://img.twi-log.com/img-dir/user-ic-user.png" alt="" width="27" height="18"></span><a href="http://twilog.org/kazuhito_m/friends-ayato_p">@ayato_p<span>727</span></a></li>
+            <li><span class="side-list-noicon"><img src="http://img.twi-log.com/img-dir/user-ic-user.png" alt="" width="27" height="18"></span><a href="http://twilog.org/kazuhito_m/friends-s_kozake">@s_kozake<span>703</span></a></li>
+            <li><span class="side-list-noicon"><img src="http://img.twi-log.com/img-dir/user-ic-user.png" alt="" width="27" height="18"></span><a href="http://twilog.org/kazuhito_m/friends-Posaune">@Posaune<span>658</span></a></li>
+            <li><a href="http://twilog.org/syobochim" class="side-list-icon" title="このユーザーのTwilogへ"><img src="http://img.twi-log.com/img-dir/user-ic-user.png" alt="" width="27" height="18"></a><a href="http://twilog.org/kazuhito_m/friends-syobochim">@syobochim<span>564</span></a></li>
+            <li><span class="side-list-noicon"><img src="http://img.twi-log.com/img-dir/user-ic-user.png" alt="" width="27" height="18"></span><a href="http://twilog.org/kazuhito_m/friends-kojiarai">@kojiarai<span>502</span></a></li>
+
+        </ul>
+        <p class="side-more"><a href="http://twilog.org/kazuhito_m/friends">すべて表示 &raquo;</a></p>
+
+    </section>
+
+    <section class="sidebox">
+        <h2 class="side-title">Hashtags</h2>
+        <ul class="side-list wide">
+            <li><a href="http://twilog.org/kazuhito_m/hashtags-withings">#withings<span>554</span></a></li>
+            <li><a href="http://twilog.org/kazuhito_m/hashtags-DevKan">#DevKan<span>455</span></a></li>
+            <li><a href="http://twilog.org/kazuhito_m/hashtags-agileradio">#agileradio<span>449</span></a></li>
+            <li><a href="http://twilog.org/kazuhito_m/hashtags-jenkinsstudy">#jenkinsstudy<span>151</span></a></li>
+            <li><a href="http://twilog.org/kazuhito_m/hashtags-stac2013">#stac2013<span>126</span></a></li>
+            <li><a href="http://twilog.org/kazuhito_m/hashtags-kanjava">#kanjava<span>101</span></a></li>
+            <li><a href="http://twilog.org/kazuhito_m/hashtags-RxTstudy">#RxTstudy<span>95</span></a></li>
+            <li><a href="http://twilog.org/kazuhito_m/hashtags-kansumi">#kansumi<span>80</span></a></li>
+            <li><a href="http://twilog.org/kazuhito_m/hashtags-scala_kb">#scala_kb<span>74</span></a></li>
+            <li><a href="http://twilog.org/kazuhito_m/hashtags-AsianAA">#AsianAA<span>71</span></a></li>
+            <li><a href="http://twilog.org/kazuhito_m/hashtags-hubot_chatops">#hubot_chatops<span>68</span></a></li>
+            <li><a href="http://twilog.org/kazuhito_m/hashtags-%E9%81%95%E3%81%84%E3%81%BE%E3%81%99">#違います<span>64</span></a></li>
+            <li><a href="http://twilog.org/kazuhito_m/hashtags-kansaifp">#kansaifp<span>63</span></a></li>
+            <li><a href="http://twilog.org/kazuhito_m/hashtags-etwest">#etwest<span>58</span></a></li>
+            <li><a href="http://twilog.org/kazuhito_m/hashtags-%E4%BA%AC%E3%82%A2%E3%82%B8%E3%83%A3">#京アジャ<span>55</span></a></li>
+
+        </ul>
+        <p class="side-more"><a href="http://twilog.org/kazuhito_m/hashtags">すべて表示 &raquo;</a></p>
+
+    </section>
+
+
+    <section class="sidebox sidebox-stats">
+        <h2 class="side-title">Stats</h2>
+        <p><a href="http://twilog.org/kazuhito_m/stats">Twilog Stats</a></p>
+    </section>
+
+
+    <section class="sidebox sidebox-feed">
+        <h2 class="side-title">Feed</h2>
+        <p><a href="http://twilog.org/rss-feed/kazuhito_m" target="_blank">RSS feed</a></p>
+    </section>
+
+
+
+    <div id="ad-side-bottom">
+        <script type="text/javascript"><!--
+google_ad_client = "ca-pub-2613098592193304";
+/* Twilog サイド下部300x250 */
+google_ad_slot = "2430856343";
+google_ad_width = 300;
+google_ad_height = 250;
+google_ad_region = "side-bottom";
+google_color_link = "0084B4";
+//-->
+</script>
+        <script type="text/javascript"
+                src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+        </script>
+
+    </div>
+
+
+
+
+
+</aside><!-- /sidebar -->
+</div><!-- /container -->
+
+<div class="f-pagetop">
+    <p><a href="#pagetop">このページの先頭へ</a></p>
+</div>
+
+<div id="source-box"></div>
+
+<footer>
+    <section>
+        <p id="ti-f-twilog"><a href="http://twilog.org/">Twilog</a></p>
+        <ul>
+            <li><a href="http://twilog.org/page-about">このサイトについて</a></li>
+            <li><a href="http://twilog.org/page-help">ヘルプ</a></li>
+            <li><a href="http://twilog.org/page-rule">利用規約</a></li>
+            <li><a href="http://twilog.org/page-about#author">運営者・お問い合わせ</a></li>
+        </ul>
+        <p><small>&copy; 2009-2014 <a href="http://www.ropross.net/" target="_blank">ropross.net</a>.
+            Created by <a href="http://twitter.com/ropross" target="_blank">@ropross</a></small></p>
+    </section>
+</footer>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-16209355-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+</body>
+</html>
