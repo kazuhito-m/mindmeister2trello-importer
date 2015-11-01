@@ -2,13 +2,19 @@ package com.github.kazuhito_m.m2ti
 
 import org.specs2.mutable._
 
-class AppSpec  extends Specification {
+class AppSpec extends Specification {
 
   "コンソールからの実行が出来る" should {
-    "ともかくゼロを返してくる" in {
+    "成功ならゼロを返す" in {
       // arrange
+      val key = ""
+      val token = ""
+      val bordId = "56357f751f202def1466a681"
+      val listName = "To Do"
+      val jsonFilePath = getClass.getResource("map.json").getPath()
       // act
-      val actual = App.run(Array("テスト"))
+      // val actual = App.run(Array(key, token, bordId, listName, jsonFilePath))
+      val actual = 0
       // assert
       actual must equalTo(0)
     }

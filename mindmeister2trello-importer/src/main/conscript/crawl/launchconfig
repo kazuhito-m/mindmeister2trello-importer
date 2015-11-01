@@ -6,7 +6,7 @@
 [scala]
   version: 2.11.2
 [repositories]
-  gh-pages:http://kazuhito-m.github.io/funiki-crawler/
+  gh-pages:http://kazuhito-m.github.io/chinchikurin-tools/
   local
   scala-tools-releases
   maven-central

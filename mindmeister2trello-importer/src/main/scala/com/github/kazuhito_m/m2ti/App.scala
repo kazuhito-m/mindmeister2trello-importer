@@ -9,7 +9,25 @@ class App extends xsbti.AppMain {
 
 object App {
   def run(args: Array[String]): Int = {
-    0
+
+    val key = args(0)
+    val token = args(1)
+    val bordId = args(2)
+    val listName = args(3)
+    val jsonFilePath = args(4)
+
+    // Jsonから「タスク名のリスト」を取得
+    val taskNames:List[String] = MindmeisterJsonAnalyzer.parse(jsonFilePath)
+
+    if (taskNames.isEmpty) {
+      return 0
+    }
+
+    // Trelloの特定ボードの特定リストに送る
+    val cardIds = TrelloImporter.postCardForTaskList(taskNames , bordId , listName , key , token)
+
+    // 申し訳程度の確認
+    if (taskNames.size == cardIds.size) 0 else 1
   }
 
   /** Standard runnable class entrypoint */
