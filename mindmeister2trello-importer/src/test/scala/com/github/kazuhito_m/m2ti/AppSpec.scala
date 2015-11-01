@@ -14,7 +14,7 @@ class AppSpec extends Specification {
       val jsonFilePath = getClass.getResource("map.json").getPath()
       // act
       // val actual = App.run(Array(key, token, bordId, listName, jsonFilePath))
-      val actual = 0
+      val actual = 0 // 本番に繋ぐわけには行かないので、当然ダミー
       // assert
       actual must equalTo(0)
     }
