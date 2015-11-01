@@ -11,11 +11,11 @@ sbt clean publish
 git checkout gh-pages
 
 # 設定により、./target/repo にビルドした一式が入っているはずなので、そこからトップへコピー。
-cp -rf ./target/repo/com ../
+cp -rf ./target/repo/com ./
 
 # git commit
-git add ../
-git commit ../ -m 'Build and publish Binally.'
+git add ./
+git commit ./ -m 'Build and publish Binally.'
 git push
 
 # ブランチを元に戻す。
