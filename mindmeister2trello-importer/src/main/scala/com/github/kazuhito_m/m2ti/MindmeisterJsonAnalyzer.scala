@@ -14,12 +14,11 @@ object MindmeisterJsonAnalyzer {
    * 引数に渡されたJsonファイルを解析し、
    * ツリーの末端を「トップからのノード名をハイフンでつなげたもの」へと
    * 文字列リスト変換する。
-
+   *
    * @param jsonFilePath 読み込み対象となるJsonファイルのパス。
    * @return ツリーの末端要素の文字列リスト。
    */
   def parse(jsonFilePath: String): List[String] = {
-
     // Jsonファイルをテキスト化
     val source = Source.fromFile(jsonFilePath)
     val jsonText = source.mkString
@@ -34,7 +33,6 @@ object MindmeisterJsonAnalyzer {
 
     // トップ要素(マインドマップの中心のボックス)部分は削る
     taskTexts.map(s => s.replaceFirst(".*?-", ""))
-
   }
 
   /**
@@ -48,13 +46,12 @@ object MindmeisterJsonAnalyzer {
    * @return 名前文字列のリスト。
    */
   def analyzeMindmap(article: JValue, prefix: String): List[String] = {
-    val childArticles = (article \ "children")
+    val childArticles = article \ "children"
     val title = (article \ "title").values.toString
-    if (childArticles.children.isEmpty) {
+    if (childArticles.children.isEmpty)
       List(prefix + title)
-    } else {
+    else
       childArticles.children.flatMap((c) => analyzeMindmap(c, prefix + title + "-"))
-    }
   }
 
 
