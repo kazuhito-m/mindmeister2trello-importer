@@ -1,6 +1,6 @@
 seq(conscriptSettings :_*)
 
-organization := "com.github.kazuhto_m"
+organization := "com.github.kazuhito_m"
 
 
 name := "mindmeister2trello-importer"
