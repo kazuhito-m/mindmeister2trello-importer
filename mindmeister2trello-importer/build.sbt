@@ -1,13 +1,13 @@
 seq(conscriptSettings :_*)
 
-organization := "com.github.kazuhto_m"
+organization := "com.github.kazuhto-m"
 
 
 name := "mindmeister2trello-importer"
 
 version := "0.1.0"
 
-scalaVersion := "2.11.2"
+scalaVersion := "2.11.7"
 
 publishTo := Some(Resolver.file("mindmeister2trello-importer",file("./target/repo"))(Patterns(true, Resolver.mavenStyleBasePattern)))
 
