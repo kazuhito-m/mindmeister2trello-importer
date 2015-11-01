@@ -6,7 +6,7 @@
 [scala]
   version: 2.11.7
 [repositories]
-  gh-pages:http://kazuhito-m.github.io/chinchikurin-tools/
+  gh-pages:http://kazuhito-m.github.io/mindmeister2trello-impoter/
   local
   scala-tools-releases
   maven-central
