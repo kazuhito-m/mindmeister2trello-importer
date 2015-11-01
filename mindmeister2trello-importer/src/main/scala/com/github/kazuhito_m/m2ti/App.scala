@@ -9,7 +9,6 @@ class App extends xsbti.AppMain {
 
 object App {
   def run(args: Array[String]): Int = {
-    MindmeisterJsonAnalyzer.parse(args(0))
     0
   }
 
