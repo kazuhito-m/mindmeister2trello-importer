@@ -1,13 +1,14 @@
-Chinchikurin Tools
-==================
+Mindmeister to Trello Importer
+==========================
 
 ## What's this ?
 
-開発に使えそうで、かつ「自分で作った」ツール類を集めるリポジトリ。
+マインドマップ作成Webサービス「[Mindmeister](https://www.mindmeister.com/)」からエクスポートした標準JSONファイルを、
+タスクボードWebサービス「[Trello](https://trello.com/)」のカードとして取り込むコマンドラインツール。
 
-## Why Chinchikurin ?
+## Usage
 
-ChibiでDevなツールを集めたとこだから。
+[こちら](http://kazuhito-m.github.io/tech/2015/11/01/)のブログ記事
 
 ## author
 
