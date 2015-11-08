@@ -8,17 +8,17 @@ import com.julienvey.trello.impl.TrelloImpl
 import scala.collection.JavaConversions._
 
 /**
- * webサービス「Trello」にむけてデータをインポートするヤーツ。
+ * import the data for Trello
  */
 object TrelloImporter {
 
 
   def postCardForTaskList(taskNames:List[String],boardId:String , taskListName:String , key : String , token : String): List[String] = {
-    // まず認証
+    // authentication
     val trelloApi: Trello = new TrelloImpl(key , token)
-    // 次に「ボード」取得
+    // get the "board"
     val board: Board = trelloApi.getBoard(boardId)
-    // タスクリスト探して、名前が合致するものあればカード作って足す。
+    // search the task list. add a card if the name matched.
     board.fetchLists().filter(_.getName == taskListName).flatMap(addTaskCards(_ , taskNames)).toList
   }
 

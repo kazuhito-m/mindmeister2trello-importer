@@ -16,17 +16,17 @@ object App {
     val listName = args(3)
     val jsonFilePath = args(4)
 
-    // Jsonから「タスク名のリスト」を取得
+    // get the list of Tasks fron JSON
     val taskNames:List[String] = MindmeisterJsonAnalyzer.parse(jsonFilePath)
 
     if (taskNames.isEmpty) {
       return 0
     }
 
-    // Trelloの特定ボードの特定リストに送る
+    // post data into a specific list of a specific Trello Board.
     val cardIds = TrelloImporter.postCardForTaskList(taskNames , bordId , listName , key , token)
 
-    // 申し訳程度の確認
+    // a tiny validation...
     if (taskNames.size == cardIds.size) 0 else 1
   }
 

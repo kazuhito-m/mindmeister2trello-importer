@@ -6,44 +6,43 @@ import org.json4s.native.JsonMethods
 import scala.io.Source
 
 /**
- * MidmeisterのマインドマップのエクスポートJsonの解析器。
+ * Analyzing a exported JSON from Midmeister's mind map
  */
 object MindmeisterJsonAnalyzer {
 
   /**
-   * 引数に渡されたJsonファイルを解析し、
-   * ツリーの末端を「トップからのノード名をハイフンでつなげたもの」へと
-   * 文字列リスト変換する。
+   * - parse JSON from parameter 'jsonFilePath'
+   * - generate a String List like:
+   *      - need example
    *
-   * @param jsonFilePath 読み込み対象となるJsonファイルのパス。
-   * @return ツリーの末端要素の文字列リスト。
+   * @param jsonFilePath path to JSON file
+   * @return a List of the buttom element of tree
    */
   def parse(jsonFilePath: String): List[String] = {
-    // Jsonファイルをテキスト化
+    // convert json file to a text data
     val source = Source.fromFile(jsonFilePath)
     val jsonText = source.mkString
     source.close()
 
-    // Jsonを読み込み
+    // read Json
     val json = JsonMethods.parse(jsonText)
     val root = json \ "root"
 
-    // Jsonを解析して「待った要素名の文字列リスト」へ変換
+    // convert Json into a List of elements
     val taskTexts = analyzeMindmap(root, "")
 
-    // トップ要素(マインドマップの中心のボックス)部分は削る
+    // remove the top element (a box of center of MindMap)
     taskTexts.map(s => s.replaceFirst(".*?-", ""))
   }
 
   /**
-   * json4s のJValueオブジェクトを一定法則で再帰的に探索し、
-   * 末端要素の名前文字列のリストを返す。
+   * convert JValue objects of json4s into String List by seaching recursively.
+   * the format of each string is:
+   *   - name of parent nodes chained with '-'
    *
-   * 名前文字列の書式は「経由した親ノードの名前をハイフン区切りでつなげたもの」。
-   *
-   * @param article 読み込み済みのjson4sのJValueオブジェクト。
-   * @param prefix プレフィックス。親の名前をハイフンでつなげた文字列。
-   * @return 名前文字列のリスト。
+   * @param article JValue object of json4s already read.
+   * @param prefix a parent nems chained with '-'
+   * @return name list
    */
   def analyzeMindmap(article: JValue, prefix: String): List[String] = {
     val childArticles = article \ "children"
