@@ -13,3 +13,8 @@ Mindmeister to Trello Importer
 ## author
 
 Kazuhito Miura ( [@kazuhito_m](https://twitter.com/kazuhito_m "kazuhito_m on Twitter") )
+
+## Special thanks
+
+[Udon](https://github.com/datsuns) ( [@datsuns](https://twitter.com/datsuns) )
+
