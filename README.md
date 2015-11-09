@@ -3,12 +3,11 @@ Mindmeister to Trello Importer
 
 ## What's this ?
 
-マインドマップ作成Webサービス「[Mindmeister](https://www.mindmeister.com/)」からエクスポートした標準JSONファイルを、
-タスクボードWebサービス「[Trello](https://trello.com/)」のカードとして取り込むコマンドラインツール。
+import a JSON data generated with [Mindmeister](https://www.mindmeister.com/) into [Trello](https://trello.com/) as a Task Card.
 
 ## Usage
 
-[こちら](http://kazuhito-m.github.io/tech/2015/11/01/)のブログ記事
+[plese read this](http://kazuhito-m.github.io/tech/2015/11/01/)
 
 ## author
 
