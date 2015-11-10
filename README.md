@@ -7,7 +7,7 @@ import a JSON data generated with [Mindmeister](https://www.mindmeister.com/) in
 
 ## Usage
 
-[plese read this](http://kazuhito-m.github.io/tech/2015/11/01/)
+[plese read this](http://kazuhito-m.github.io/tech/2015/11/02/mindmeister2trello-importer/)
 
 ## author
 

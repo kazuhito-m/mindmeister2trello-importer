@@ -8,7 +8,7 @@ Mindmeister to Trello Importer
 
 ## Usage
 
-[こちら](http://kazuhito-m.github.io/tech/2015/11/01/)のブログ記事
+[こちら](http://kazuhito-m.github.io/tech/2015/11/02/mindmeister2trello-importer/)のブログ記事
 
 ## author
 
