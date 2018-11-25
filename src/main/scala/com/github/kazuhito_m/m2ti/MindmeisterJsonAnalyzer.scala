@@ -50,7 +50,7 @@ object MindmeisterJsonAnalyzer {
     if (childArticles.children.isEmpty)
       List(prefix + title)
     else
-      childArticles.children.flatMap((c) => analyzeMindmap(c, prefix + title + "-"))
+      childArticles.children.flatMap(analyzeMindmap(_, prefix + title + "-"))
   }
 
 
